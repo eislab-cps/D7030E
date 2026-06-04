@@ -16,11 +16,9 @@ In this lab you will explore a Private LTE network scenario motivated by industr
   - `deliverables.md` – list of required submission files.
 - **code/**
   - `Lab4_Cpp_LTE.cc` – C++ starter for LTE downlink scenario (supports `--mobility` and `--speed`).
-  - `Lab4_Py_LTE.py` – Python equivalent with same mobility flags.
 ````
 ## Running the Code
 
-**C++**:
 ```bash
 cp Lab-04-LTE/code/Lab4_Cpp_LTE.cc ~/ns-allinone-3.47/ns-3.47/scratch/
 cd ~/ns-allinone-3.47/ns-3.47
@@ -28,17 +26,10 @@ cd ~/ns-allinone-3.47/ns-3.47
 ./ns3 run scratch/Lab4_Cpp_LTE --dataRate=10Mbps --distance=100
 ```
 
-**Python**:
-
-```bash
-python3 Lab-04-LTE/code/Lab4_Py_LTE.py --dataRate=10Mbps --distance=100
-```
-
 ### Mobile UE (Part 3)
 
 ```bash
 ./ns3 run "scratch/Lab4_Cpp_LTE --mobility=true --speed=10 --distance=300 --csv=mobile_run"
-python3 Lab-04-LTE/code/Lab4_Py_LTE.py --mobility=true --speed=10 --distance=300
 ```
 
 Adjust `--dataRate`, `--distance`, `--speed`, and `--mobility` as instructed.  
@@ -78,7 +69,6 @@ Use `--antenna=isotropic` for distance experiments.
 
 (see `docs/deliverables.md` for details)
 
-* `choice.txt` – language used (`C++` or `Python`).
 * LTE trace files: `DlRlcStats.trace`, `DlPdcpStats.trace`.
 * CSVs: `throughput_vs_rate.csv`, `throughput_vs_distance.csv`.
 * Plots: `throughput_vs_rate_plot.png`, `throughput_vs_distance_plot.png`.

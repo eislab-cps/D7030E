@@ -1,6 +1,6 @@
 # Lab 01: Propagation Models
 
-**Language Options:** Complete this lab in **C++ or Python** (choose one).  
+**Language:** C++  
 **ns-3 version:** 3.47
 
 ---
@@ -105,31 +105,6 @@ Notes:
 **Likely Issues:**
 - Higher variance in throughput vs. other models: use multiple seeds and report
   the average, not a single run.
-
-### Task (Python): Nakagami Fading Model
-
-Repeat the Nakagami experiment in Python using `Lab1_Py_Nakagami.py`.
-
----
-
-### Task (Python): Propagation Models
-
-For each model above, repeat the experiments in Python:
-
-1. **Copy** `code/Lab1_Py_TwoRay.py`, `Lab1_Py_Cost231.py`, `Lab1_Py_Friis.py`,
-   `Lab1_Py_Nakagami.py` into `scratch/`.
-2. **Ensure** `PYTHONPATH` is set:
-
-   ```bash
-   export PYTHONPATH=~/ns-allinone-3.47/ns-3.47/build/bindings/python:$PYTHONPATH
-   ```
-3. **Run** each script with distance parameter looping over `D`.
-4. **Collect** and **plot** bit-rate vs. distance for all four models.
-
-**Likely Issues:**
-
-* Python binding import errors: see [1.3 in common/troubleshooting.md](../common/troubleshooting.md#13-importerror-no-module-named-nscore).
-* Scheduler or File I/O errors: verify `scratch/` paths and permissions.
 
 ---
 

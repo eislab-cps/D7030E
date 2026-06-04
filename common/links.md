@@ -26,10 +26,6 @@ All labs reference ns-3 version **3.47**. Use these links to access API referenc
   https://www.nsnam.org/docs/manual/html/  
   Reference manual.
 
-- **Python Bindings Tutorial**  
-  https://www.nsnam.org/docs/release/3.47/python/tutorial/python_bindings.html  
-  Introduction to using ns-3's Python API.
-
 ---
 
 ## API Reference (Doxygen)
@@ -96,25 +92,6 @@ All labs reference ns-3 version **3.47**. Use these links to access API referenc
 
 ---
 
-## Python API Reference
-
-- **ns.core.Simulator**  
-  https://www.nsnam.org/docs/release/3.47/doxygen/python/classns3_1_1core_1_1Simulator.html
-
-- **ns.network.NodeContainer**  
-  https://www.nsnam.org/docs/release/3.47/doxygen/python/classns3_1_1network_1_1NodeContainer.html
-
-- **ns.wifi.YansWifiChannelHelper**  
-  https://www.nsnam.org/docs/release/3.47/doxygen/python/classns3_1_1wifi_1_1YansWifiChannelHelper.html
-
-- **ns.applications.OnOffHelper**  
-  https://www.nsnam.org/docs/release/3.47/doxygen/python/classns3_1_1applications_1_1OnOffHelper.html
-
-- **ns.flow_monitor.FlowMonitorHelper**  
-  https://www.nsnam.org/docs/release/3.47/doxygen/python/classns3_1_1flow__monitor_1_1FlowMonitorHelper.html
-
----
-
 ## Routing Protocol RFCs
 
 - RFC 3561 — AODV: https://doi.org/10.17487/RFC3561
@@ -139,10 +116,5 @@ All labs reference ns-3 version **3.47**. Use these links to access API referenc
 - ZigBee overview (Texas Instruments): https://www.ti.com/wireless-connectivity/zigbee/overview.html
 - ZigBee ns-3 module (ns-3.47) — https://www.nsnam.org (search: zigbee module)
 - Bluetooth technical overview: https://www.bluetooth.com/learn-about-bluetooth/tech-overview/
-
-## Python Bindings (ns-3.47)
-
-- Cppyy documentation — https://cppyy.readthedocs.io
-- ns-3 Python bindings guide — https://www.nsnam.org/docs/manual/html/python.html
 
 ---

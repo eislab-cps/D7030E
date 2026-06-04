@@ -1,6 +1,6 @@
 # Lab 04: LTE for Industrial Automation (Private LTE)
 
-**Language Options:** Complete this lab in **C++ or Python** (choose one).  
+**Language:** C++  
 **ns-3 version:** 3.47
 
 ---
@@ -79,21 +79,6 @@ By the end of this lab you will:
 
 ---
 
-### Task (Python): LTE Scenario
-
-Repeat Part 1 in Python using `code/Lab4_Py_LTE.py`:
-
-1. **Copy** script to `scratch/`.
-2. **Set** `PYTHONPATH`:
-
-   ```bash
-   export PYTHONPATH=~/ns-allinone-3.47/ns-3.47/build/bindings/python:$PYTHONPATH
-   ```
-3. **Run** for the same three data rates.
-4. **Collect** the same trace files (`.trace`).
-
----
-
 ## Part 2: Throughput Analysis
 
 ### Task: Throughput vs. Data Rate
@@ -139,14 +124,6 @@ In industrial Private LTE deployments, AGVs (Automated Guided Vehicles) and AMRs
    - How does throughput change as the UE approaches the eNB?
    - At what distance does throughput peak?
    - How does UE speed affect throughput variability?
-
-### Task (Python)
-
-Repeat using:
-
-```bash
-python3 code/Lab4_Py_LTE.py --mobility=true --speed=10 --distance=300
-```
 
 ---
 

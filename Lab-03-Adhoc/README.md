@@ -15,10 +15,10 @@ In this lab you will investigate the behavior of Wi-Fi in **ad hoc mode** (no ac
   - `Lab-03-Instructions.md` – detailed lab description.
   - `deliverables.md` – required submission files.
 - **code/**
-  - Part 1: `Lab3_Cpp_Adhoc.cc` (supports `--routing=olsr|aodv`), `Lab3_Py_Adhoc.py`
-  - Part 2: `Lab3_Cpp_PayloadSweep.cc`, `Lab3_Py_PayloadSweep.py`
-  - Part 3: `Lab3_Cpp_TCP.cc`, `Lab3_Py_TCP.py`
-  - Part 4: `Lab3_Cpp_Hidden.cc`, `Lab3_Py_Hidden.py`
+  - Part 1: `Lab3_Cpp_Adhoc.cc` (supports `--routing=olsr|aodv`)
+  - Part 2: `Lab3_Cpp_PayloadSweep.cc`
+  - Part 3: `Lab3_Cpp_TCP.cc`
+  - Part 4: `Lab3_Cpp_Hidden.cc`
 
 Each file sets up an ad hoc Wi-Fi network scenario corresponding to one part of the lab.
 ````
@@ -26,17 +26,11 @@ Each file sets up an ad hoc Wi-Fi network scenario corresponding to one part of 
 
 ### Example (Part 1 – Multi-hop UDP Chain)
 
-**C++**:
 ```bash
 cp Lab-03-Adhoc/code/Lab3_Cpp_Adhoc.cc ~/ns-allinone-3.47/ns-3.47/scratch/
 cd ~/ns-allinone-3.47/ns-3.47
 ./ns3 build
 ./ns3 run scratch/Lab3_Cpp_Adhoc --numNodes=5 --pktSize=500
-```
-
-**Python**:
-```bash
-python3 Lab-03-Adhoc/code/Lab3_Py_Adhoc.py --numNodes=5 --pktSize=500
 ```
 
 ### Example (Part 4 – Routing Comparison)
@@ -91,7 +85,6 @@ Adjust `--numNodes`, `--pktSize`, `--routing`, and seeds as required.
 
 (see `docs/deliverables.md` for full detail)
 
-* `choice.txt` – language used (`C++` or `Python`)
 * Part 1: CSV, plot, anim XML, screenshot
 * Part 2: CSV, per-hop plots directory
 * Part 3: CSV, comparison plot
@@ -106,6 +99,5 @@ Adjust `--numNodes`, `--pktSize`, `--routing`, and seeds as required.
 * **RTS/CTS toggle:** Set `RtsCtsThreshold=0` *before* installing devices, otherwise "RTS enabled" runs will look identical to off.
 * **TCP startup time:** Ensure simulation runs long enough (≥10s) for TCP flows to reach steady state.
 * **Payload sweep plots:** The deliverables require one plot per hop count (named `hopX.png`). Don't combine all hops in a single figure unless you also provide the per-hop plots.
-* **Python API:** Use `WIFI_STANDARD_80211b` (not `WIFI_PHY_STANDARD_80211b`) and `YansWifiChannelHelper()` default constructor (not `.Default()`).
 
 ---

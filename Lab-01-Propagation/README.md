@@ -23,15 +23,12 @@ This lab explores how different propagation loss models in ns-3 affect wireless 
 - **code/**
   - `Lab1_Cpp_Friis.cc`, `Lab1_Cpp_TwoRay.cc`, `Lab1_Cpp_Cost231.cc`,
     `Lab1_Cpp_Nakagami.cc`
-  - `Lab1_Py_Friis.py`, `Lab1_Py_TwoRay.py`, `Lab1_Py_Cost231.py`,
-    `Lab1_Py_Nakagami.py`
 
 Each file sets up a two-node Wi-Fi link and applies the respective propagation model.
 
 ````
 ## Running the Code
 
-### C++ path
 1. Copy the desired `.cc` file into your ns-3 `scratch/` directory.
 2. Build and run, e.g.:
    ```bash
@@ -41,16 +38,6 @@ Each file sets up a two-node Wi-Fi link and applies the respective propagation m
 
 
 3. Capture output data into a CSV as required (you may need to redirect or modify code to log distance vs throughput).
-
-### Python path
-
-1. Ensure `PYTHONPATH` is set (or use Docker).
-2. Run, e.g.:
-
-   ```bash
-   python3 Lab-01-Propagation/code/Lab1_Py_Friis.py
-   ```
-3. Save results into the specified CSV files.
 
 ---
 
@@ -77,7 +64,6 @@ Additionally, collect **real-world measurements** (RSSI vs distance), compute pa
 
 (see `docs/deliverables.md` for details)
 
-* `choice.txt` – either `C++` or `Python`
 * Simulation CSVs and plots for each model
 * Measured vs Friis CSVs and comparison plot
 
@@ -85,7 +71,7 @@ Additionally, collect **real-world measurements** (RSSI vs distance), compute pa
 
 ## Common Pitfalls
 
-* **Wrong Wi-Fi rate string:** Use `"DsssRate5_5Mbps"` (underscore, not dot) to avoid *“no matching DataMode”* errors.
+* **Wrong Wi-Fi rate string:** Use `"DsssRate5_5Mbps"` (underscore, not dot) to avoid *"no matching DataMode"* errors.
 * **Insufficient distance points:** Use enough distance values to clearly show the drop in throughput.
 * **Path loss calculation:** Ensure you convert RSSI to path loss correctly (in dB).
 * **Plot labeling:** Every plot must have axes labels and a legend.

@@ -1,6 +1,6 @@
 # Troubleshooting & Common Pitfalls
 
-All labs target **ns-3 version 3.40**. If you diverge from that version, results may vary.
+All labs target **ns-3 version 3.47**. If you diverge from that version, results may vary.
 
 ---
 
@@ -31,15 +31,6 @@ All labs target **ns-3 version 3.40**. If you diverge from that version, results
 
   ```bash
   ./build.py --qmake-path /usr/lib/qt5/bin/qmake
-  ```
-
-### 1.3 `ImportError: No module named ns.core`
-
-* **Cause:** Python bindings not on `PYTHONPATH`.
-* **Fix:**
-
-  ```bash
-  export PYTHONPATH=~/ns-allinone-3.40/ns-3.40/build/bindings:$PYTHONPATH
   ```
 
 ---
@@ -84,7 +75,7 @@ All labs target **ns-3 version 3.40**. If you diverge from that version, results
 * **Fix:**
 
   1. Install FlowMonitor *before* any application starts.
-  2. Verify your classifier’s five-tuple (source IP, destination IP, ports, protocol).
+  2. Verify your classifier's five-tuple (source IP, destination IP, ports, protocol).
 
 ---
 
@@ -129,12 +120,6 @@ error: no matching DataMode 'DsssRate5.5Mbps'
   AnimationInterface anim("file.xml");
   // keep `anim` in scope until after Simulator::Destroy()
   ```
-* **Fix (Python):**
-
-  ```python
-  import ns.netanim
-  anim = ns.netanim.AnimationInterface("file.xml")
-  ```
 
 ### 4.2 GUI not displaying (WSL)
 
@@ -148,27 +133,5 @@ error: no matching DataMode 'DsssRate5.5Mbps'
      echo "export DISPLAY=$(grep -m1 nameserver /etc/resolv.conf | awk '{print $2}'):0" >> ~/.bashrc
      source ~/.bashrc
      ```
-
----
-
-## 5. Python Binding Specific
-
-### 5.1 `No module named pybindgen`
-
-* **Cause:** pybindgen not installed or virtualenv inactive.
-* **Fix:**
-
-  ```bash
-  pip3 install pybindgen
-  ```
-
-### 5.2 `TypeError: Schedule() takes 2 arguments but 3 given`
-
-* **Cause:** incorrect usage of `Simulator.Schedule` binding.
-* **Fix:** use exactly two args:
-
-  ```python
-  Simulator.Schedule(Seconds(1.0), lambda: print("..."))
-  ```
 
 ---

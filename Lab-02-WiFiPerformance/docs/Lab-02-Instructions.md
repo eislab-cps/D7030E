@@ -1,6 +1,6 @@
 # Lab 02: Smart-Building WiFi Performance
 
-**Language Options:** Complete this lab in **C++ or Python** (choose one).  
+**Language:** C++  
 **ns-3 version:** 3.47
 
 ---
@@ -114,25 +114,6 @@ If you want to keep logs:
 
 ---
 
-### Task (Python): Scenario 1 (Parts 1 & 2)
-
-Repeat the C++ steps above using `code/Lab2_Py_Scenario1.py` and `code/Lab2_Py_Scenario2.py`:
-
-1. **Copy** scripts to `scratch/`.
-2. **Set** `PYTHONPATH`:
-
-   ```bash
-   export PYTHONPATH=~/ns-allinone-3.47/ns-3.47/build/bindings/python:$PYTHONPATH
-   ```
-3. **Run** each scenario with the same parameter sweeps and three seeds.
-4. **Collect** throughput data and visualize with NetAnim (scripts enable XML output).
-
-**Likely issues:**
-
-* Python import errors: see [1.3 in common/troubleshooting.md](../common/troubleshooting.md#13-importerror-no-module-named-nscore).
-
----
-
 ## Part 2: Packet Size & Hidden-Terminal
 
 ![Two-Ray Ground Reflection Model](/common/images/hiddenTerminalScenario.png)  
@@ -166,14 +147,6 @@ Server ──CSMA── AP0(0,0) ────── AP1(50,0) ──CSMA── (
 3. **Collect** `roaming_throughput.csv` (columns: `time_s`, `throughput_bps`).
 4. **Repeat** for speeds {2, 5, 10} m/s.
 5. **Plot** throughput vs time for each speed; mark the approximate handoff point.
-
-### Task (Python)
-
-Repeat using `code/Lab2_Py_Roaming.py`:
-
-```bash
-python3 code/Lab2_Py_Roaming.py --speed=5 --simDuration=25 --seed=1
-```
 
 ### Analysis questions
 

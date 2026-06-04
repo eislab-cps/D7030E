@@ -12,8 +12,6 @@ All labs have been developed and validated on **ns-3 version 3.47**.
 | CMake | 3.20 |
 | GCC | 11.0 |
 | Clang | 17 (alternative to GCC) |
-| Python | 3.10 |
-| pip package: cppyy | latest |
 
 These are the ns-3.47 minimum requirements.  Students compiling on university
 systems or WSL should verify their toolchain before starting the labs.  The
@@ -30,9 +28,7 @@ on the course server, which satisfies all requirements.
 sudo apt-get update
 sudo apt-get install -y \
     build-essential gcc g++ \
-    python3 python3-dev python3-pip \
     autoconf automake libxmu-dev cvs git cmake p7zip-full \
-    python3-matplotlib python3-tk \
     qtbase5-dev qttools5-dev-tools \
     gnuplot-x11 wireshark net-tools
 ````
@@ -42,9 +38,7 @@ sudo apt-get install -y \
 ```bash
 sudo dnf install -y \
     @development-tools gcc-c++ \
-    python3 python3-devel python3-pip \
     autoconf automake libXmu-devel cvs git cmake p7zip \
-    python3-matplotlib python3-tkinter \
     qt5-qtbase-devel qt5-qmake qt5-qttools-devel \
     gnuplot wireshark net-tools
 ```
@@ -52,8 +46,7 @@ sudo dnf install -y \
 ### macOS Sonoma
 
 ```bash
-brew install python@3 cmake qt wireshark gnuplot
-pip3 install cppyy matplotlib
+brew install cmake qt wireshark gnuplot
 ```
 
 ---
@@ -84,9 +77,7 @@ pip3 install cppyy matplotlib
    sudo apt-get update
    sudo apt-get install -y \
        build-essential gcc g++ \
-       python3 python3-dev python3-pip \
        autoconf automake libxmu-dev cvs git cmake p7zip-full \
-       python3-matplotlib python3-tk \
        qtbase5-dev qttools5-dev-tools \
        gnuplot-x11 wireshark net-tools
    ```
@@ -120,7 +111,6 @@ pip3 install cppyy matplotlib
    ./build.py \
      --enable-examples \
      --enable-tests \
-     --enable-python-bindings \
      --qmake-path /usr/lib/qt5/bin/qmake
    ```
 
@@ -130,8 +120,7 @@ pip3 install cppyy matplotlib
    cd ns-3.47
    cmake -S . -B build \
      -DNS3_BUILD_EXAMPLES=ON \
-     -DNS3_BUILD_TESTS=ON \
-     -DNS3_BUILD_PYTHON_BINDINGS=ON
+     -DNS3_BUILD_TESTS=ON
    cmake --build build -j$(nproc)
    ```
 
@@ -142,43 +131,13 @@ pip3 install cppyy matplotlib
    # should print "Hello Simulator"
    ```
 
-5. **Set PYTHONPATH**
+5. **Set environment variables**
 
    ```bash
-   export PYTHONPATH=$NS3_HOME/build/bindings/python
+   export NS3_DIR=$HOME/ns-allinone-3.47/ns-3.47
+   export LD_LIBRARY_PATH=$NS3_DIR/build/lib:$LD_LIBRARY_PATH
+   export PATH=$NS3_DIR:$NS3_DIR/build:$PATH
    ```
-
-> **Note (ns-3.47):** The Python binding framework changed from Pybindgen to
-> Cppyy in ns-3.43.  The `PYTHONPATH` directory has moved from `build/bindings`
-> to `build/bindings/python`.  If you see `ModuleNotFoundError: No module named 'ns'`
-> verify that you are using the new path and that the `cppyy` pip package is installed.
-
-6. **Verify Python bindings**
-
-   ```bash
-   export PYTHONPATH=~/ns-allinone-3.47/ns-3.47/build/bindings/python:$PYTHONPATH
-   python3 -c "from ns import ns; print(ns.Simulator.Now())"
-   # should output "0ns" or "0s"
-   ```
-
----
-
-### Installing the cppyy Python package
-
-Cppyy is required for ns-3.47 Python bindings:
-
-```bash
-pip install cppyy
-```
-
-Verify the installation:
-
-```bash
-python3 -c "import cppyy; print('cppyy OK')"
-```
-
-If this fails, check that Python ≥ 3.10 is active.  On systems with multiple
-Python versions use `python3.10 -m pip install cppyy`.
 
 ---
 

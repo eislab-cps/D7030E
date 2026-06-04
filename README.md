@@ -2,7 +2,7 @@
 
 > **Course code:** D7030E  
 > **University:** Luleå University of Technology  
-> **Languages:** C++ **or** Python (choose one per lab)  
+> **Language:** C++  
 > **ns-3 version:** 3.47
 
 This repository contains the laboratory exercises for **D7030E Advanced Wireless
@@ -11,7 +11,6 @@ simulate realistic wireless scenarios drawn from modern industrial and research
 contexts: industrial propagation environments, smart-building WiFi deployment,
 UAV mesh networks, and private LTE for industrial automation.
 
-Each lab can be completed in **either C++ or Python**. You only need to **choose one language path per lab (not both).**
 Please submit a PDF report to Canvas, and keep the output/files ready for Lab sessions.
 
 ---
@@ -22,10 +21,10 @@ Please submit a PDF report to Canvas, and keep the output/files ready for Lab se
 advanceWirelessNetworks/
 ├─ README.md                       # Start here (course overview, setup, FAQs)
 ├─ Makefile                        # Convenience targets: docker-build, shell, check, lab0, etc.
-├─ Dockerfile                      # Pinned ns-3.47 image build (Ubuntu 22.04 + cppyy bindings)
+├─ Dockerfile                      # Pinned ns-3.47 image build (Ubuntu 22.04)
 ├─ scripts/
-│  ├─ setup_env.sh                 # Exports NS3_DIR, PYTHONPATH, LD_LIBRARY_PATH; sanity import check
-│  └─ ci_smoke.sh                  # Quick end-to-end smoke test inside container (tutorial echo + cppyy)
+│  ├─ setup_env.sh                 # Exports NS3_DIR, LD_LIBRARY_PATH
+│  └─ ci_smoke.sh                  # Quick end-to-end smoke test inside container
 │  # (add your own helpers here if needed)
 │
 ├─ Lab-00-Introduction/
@@ -34,7 +33,6 @@ advanceWirelessNetworks/
 │  │  ├─ Lab-00-Instructions.pdf
 │  │  └─ deliverables.md           # Exact filenames expected
 │  ├─ code/
-│  │  ├─ Lab0_Py_Hello.py          # Python hello (cppyy-native; no pybindgen imports)
 │  │  ├─ Lab0_Cpp_Hello.cc         # C++ hello
 │  │  └─ Lab0_Cpp_AnimRich.cc      # NetAnim demo
 │  └─ submission/                  # You create this; place outputs here (txt, xml, png)
@@ -45,7 +43,7 @@ advanceWirelessNetworks/
 │  ├─ docs/
 │  │  ├─ Lab-01-Instructions.pdf
 │  │  └─ deliverables.md
-│  ├─ code/                        # Friis / Two-Ray / COST231 (C++ and/or Python starters)
+│  ├─ code/                        # Friis / Two-Ray / COST231 (C++ starters)
 │  └─ submission/                  # CSVs + plots comparing models; measured data if required
 │
 ├─ Lab-02-WiFiPerformance/
@@ -69,7 +67,7 @@ advanceWirelessNetworks/
 │  ├─ docs/
 │  │  ├─ Lab-04-Instructions.pdf
 │  │  └─ deliverables.md
-│  ├─ code/                        # LTE/EPC downlink scenario (C++ and/or Python)
+│  ├─ code/                        # LTE/EPC downlink scenario (C++)
 │  └─ submission/                  # RLC/PDCP traces + throughput-vs-rate/distance CSVs & plots
 │
 ├─ .devcontainer/                  # (optional) VS Code devcontainer
@@ -80,7 +78,7 @@ advanceWirelessNetworks/
 
 Each `Lab-XX` folder contains:
 - `docs/` → instructions PDF + `deliverables.md`
-- `code/` → starter programs (both C++ and Python)
+- `code/` → starter programs (C++)
 - You will create a `submission/` subfolder with your results.
 
 ---
@@ -102,10 +100,10 @@ source scripts/setup_env.sh  # Set ns-3 environment
 
    ```bash
    sudo apt-get update && sudo apt-get install -y \
-     build-essential cmake g++ python3 python3-dev python3-pip \
+     build-essential cmake g++ \
      qtbase5-dev qttools5-dev-tools \
      libxml2 libxml2-dev git pkg-config \
-     python3-matplotlib gnuplot-x11 wireshark
+     gnuplot-x11 wireshark
    ```
 2. Download & build ns-3.47:
 
@@ -113,13 +111,12 @@ source scripts/setup_env.sh  # Set ns-3 environment
    wget https://www.nsnam.org/releases/ns-allinone-3.47.tar.bz2
    tar xjf ns-allinone-3.47.tar.bz2
    cd ns-allinone-3.47
-   ./build.py --enable-examples --enable-tests --enable-python-bindings
+   ./build.py --enable-examples --enable-tests
    ```
 3. Set env vars (add to `.bashrc`):
 
    ```bash
    export NS3_DIR=$HOME/ns-allinone-3.47/ns-3.47
-   export PYTHONPATH=$NS3_DIR/build/bindings/python:$PYTHONPATH
    export LD_LIBRARY_PATH=$NS3_DIR/build/lib:$LD_LIBRARY_PATH
    export PATH=$NS3_DIR:$NS3_DIR/build:$PATH
    ```
@@ -128,25 +125,19 @@ Verify:
 
 ```bash
 $NS3_DIR/build/src/core/examples/hello-simulator
-python3 -c "from ns import ns; print(ns.core.Simulator.Now())"
 ```
 
 ---
 
 ## Running Labs
 
-* **C++:** Copy the lab’s `.cc` file into `ns-3.47/scratch/`, then:
+Copy the lab’s `.cc` file into `ns-3.47/scratch/`, then:
 
-  ```bash
-  cd $NS3_DIR
-  ./ns3 build
-  ./ns3 run scratch/Lab1_Cpp_Friis --distance=100
-  ```
-* **Python:** Run directly:
-
-  ```bash
-  python3 Lab-01-Propagation/code/Lab1_Py_Friis.py --distance=100
-  ```
+```bash
+cd $NS3_DIR
+./ns3 build
+./ns3 run scratch/Lab1_Cpp_Friis --distance=100
+```
 
 Each lab requires multiple runs (e.g., sweeping distance, payload size, data rate, seeds). Use command-line arguments (`--rate`, `--payload`, `--seed`, etc.) as specified in the lab instructions.
 
@@ -154,7 +145,7 @@ Outputs:
 
 * **Console logs** → redirect to `.txt`
 * **FlowMonitor CSVs** → throughput, PDR results
-* **Plots (PNG)** → use `plot_helper.py` or external tools
+* **Plots (PNG)** → use external tools (gnuplot, matplotlib, Excel, etc.)
 * **NetAnim XML** → open in NetAnim GUI, capture screenshot
 
 ---
@@ -354,7 +345,7 @@ Expected: the `=== ns-3.47 smoke test ===` output with all 3 steps passing.
 ## Lab Overview
 | Lab                            | Theme                                      | Key Tasks                                                              |
 | ------------------------------ | ------------------------------------------ | ---------------------------------------------------------------------- |
-| **Lab 00** – Introduction      | Install check, Hello world, NetAnim basics | Run hello sim (C++/Py), generate XML, screenshot                       |
+| **Lab 00** – Introduction      | Install check, Hello world, NetAnim basics | Run hello sim (C++), generate XML, screenshot                          |
 | **Lab 01** – Propagation       | Friis vs Two-Ray vs COST231 models         | Throughput vs distance, compare with measured path-loss                |
 | **Lab 02** – Wi-Fi Performance | Infrastructure Wi-Fi                       | Rate sweep, payload sweep, hidden terminal (RTS/CTS)                   |
 | **Lab 03** – Ad hoc            | Multi-hop Wi-Fi                            | UDP chain vs hops, payload sweep, TCP vs UDP, hidden terminal          |
@@ -367,7 +358,6 @@ See each lab’s `deliverables.md` for exact filenames and submission requiremen
 ## Submission Guidelines
 
 * Place all deliverables inside `Lab-XX-.../submission/`.
-* **Must include** `choice.txt` with exactly one line: `C++` or `Python`.
 * **File names must match** exactly what’s listed in `deliverables.md`.
 * **CSV files:** include header rows.
 * **Plots:** PNG format, axis labels, units, legends required.
@@ -376,9 +366,6 @@ See each lab’s `deliverables.md` for exact filenames and submission requiremen
 ---
 
 ## Troubleshooting (Quick)
-
-* **`ImportError: No module named ns.core`**
-  → PYTHONPATH not set. Run `source scripts/setup_env.sh`.
 
 * **Wi-Fi mode error (`no matching DataMode`)**
   → Use correct string: `DsssRate5_5Mbps`.

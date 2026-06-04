@@ -1,6 +1,6 @@
 # Lab 03: UAV Mesh & Ad-hoc Network Performance
 
-**Language Options:** Complete this lab in **C++ or Python** (choose one).  
+**Language:** C++  
 **ns-3 version:** 3.47
 
 ---
@@ -64,24 +64,6 @@ By the end of this lab you will:
 **Likely issues:**
 
 * No routing → throughput=0: add OLSR or static routing helper (see troubleshooting).
-* Python import error if using wrong build folder (for Python tasks).
-
-### Task (Python): Chain Setup & Measurement
-
-Repeat Part 1 in Python:
-
-1. **Copy** `code/Lab3_Py_Adhoc.py` to `scratch/`.
-2. **Set** `PYTHONPATH`:
-
-   ```bash
-   export PYTHONPATH=~/ns-allinone-3.47/ns-3.47/build/bindings/python:$PYTHONPATH
-   ```
-3. **Run** with the same arguments:
-
-   ```bash
-   python3 scratch/Lab3_Py_Adhoc.py --numNodes=5 --pktSize=700 --distance=150
-   ```
-4. **Collect** and average throughput; **generate** `lab3-py-adhoc.xml` for NetAnim.
 
 ---
 
@@ -103,10 +85,6 @@ Repeat Part 1 in Python:
    * Throughput vs. packet size for each hop count.
    * Throughput vs. number of hops for packet size = 1200 B.
 
-### Task (Python): Sweep
-
-Repeat Part 2 in Python with `Lab3_Py_PayloadSweep.py`; produce the same plots.
-
 ---
 
 ## Part 3: TCP vs. UDP Comparison
@@ -126,15 +104,11 @@ Repeat Part 2 in Python with `Lab3_Py_PayloadSweep.py`; produce the same plots.
 
 * Low TCP throughput → adjust segment size (see troubleshooting).
 
-### Task (Python): TCP
-
-Repeat Part 3 in Python with `Lab3_Py_TCP.py`.
-
 ---
 
 ## Part 4: Routing Protocol Comparison — AODV vs. OLSR
 
-The `--routing` flag in both `Lab3_Cpp_Adhoc.cc` and `Lab3_Py_Adhoc.py` selects between:
+The `--routing` flag in `Lab3_Cpp_Adhoc.cc` selects between:
 
 - **OLSR** (Optimized Link State Routing) — proactive, table-driven, RFC 3626.
 - **AODV** (Ad hoc On-Demand Distance Vector) — reactive, route-on-demand, RFC 3561.
@@ -184,10 +158,6 @@ The `--routing` flag in both `Lab3_Cpp_Adhoc.cc` and `Lab3_Py_Adhoc.py` selects 
    Config::SetDefault("ns3::WifiRemoteStationManager::RtsCtsThreshold","0");
    ```
 7. **Rerun**, **re-measure**, and compare.
-
-### Task (Python): Hidden-Terminal
-
-Repeat Part 5 in Python with `Lab3_Py_Hidden.py`.
 
 ---
 
