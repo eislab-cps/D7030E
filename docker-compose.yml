@@ -1,0 +1,14 @@
+name: d7030e_ns3
+
+services:
+  ns3:
+    image: ns3-3.40:latest
+    container_name: ns3dev
+    tty: true
+    stdin_open: true
+    working_dir: /work
+    command: bash -c "source scripts/setup_env.sh && cd \"$$NS3_DIR\" && exec bash"
+    init: true
+    volumes:
+      - .:/work
+      - ./exec:/opt/ns-allinone-3.40/ns-3.40/scratch/exec

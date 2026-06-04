@@ -1,0 +1,42 @@
+dev-tests/
+*.pcap
+*.trace
+DlRlcStats.trace
+DlPdcpStats.trace
+submission/
+.ns3/
+
+# Build artifacts
+**/build/
+**/ns-3.*/build/
+**/ns-allinone-*/ns-3.*/build/
+
+# Scratch and temporary files
+**/scratch/*.o
+**/scratch/*.d
+**/scratch/*.log
+
+# Generated NetAnim XML (if ever checked in)
+**/*.xml
+
+# Python caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+*~ 
+*.swp
+*.swo
+
+# Virtual environments
+venv/
+.env/
+
+# Windows-run specific
+netanim
+exec/*
+!exec/CMakeLists.txt
