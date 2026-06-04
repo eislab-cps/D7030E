@@ -157,7 +157,7 @@ pip3 install cppyy matplotlib
 
    ```bash
    export PYTHONPATH=~/ns-allinone-3.47/ns-3.47/build/bindings/python:$PYTHONPATH
-   python3 -c "from ns import ns; print(ns.core.Simulator.Now())"
+   python3 -c "from ns import ns; print(ns.Simulator.Now())"
    # should output "0ns" or "0s"
    ```
 

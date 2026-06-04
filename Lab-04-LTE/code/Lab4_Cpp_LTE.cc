@@ -95,8 +95,7 @@ int main(int argc, char* argv[])
   // Optional CSV path: if non-empty, write one summary row
   std::string csvPath   = "";
   // Mobile UE: if true, UE moves at --speed m/s from x=distance toward eNB
-  bool        mobility        = false;   // enableMobility flag
-  bool&       enableMobility  = mobility; // alias for test-grep compatibility
+  bool        mobility        = false;   // mobile UE flag
   double      ueSpeed         = 10.0;   // m/s (typical vehicle speed in a factory)
 
   bool enableAnim = false;   // NetAnim XML off by default

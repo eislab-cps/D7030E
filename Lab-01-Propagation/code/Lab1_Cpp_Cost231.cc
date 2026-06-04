@@ -67,7 +67,7 @@ int main (int argc, char* argv[])
   rx.Start(Seconds(0.0)); rx.Stop(Seconds(10.0));
 
   FlowMonitorHelper fm; Ptr<FlowMonitor> m = fm.InstallAll();
-  AnimationInterface anim("/work/Lab-01-Propagation/submission/Lab1_Cost231.xml");  // change file name per scenario
+  AnimationInterface anim("Lab1_Cost231.xml");  // change file name per scenario
   anim.SetMobilityPollInterval(Seconds(0.5));   // how often positions are sampled
 
   // (Optional niceties)

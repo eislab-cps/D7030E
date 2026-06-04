@@ -144,7 +144,7 @@ static CaseResult RunOneCase(uint32_t nodesCount,
   Ptr<ListPositionAllocator> pos = CreateObject<ListPositionAllocator>();
   for (uint32_t i = 0; i < nodesCount; ++i)
   {
-    pos->Add(Vector(distance * i, 0.0, 0.0));
+    pos->Add(Vector(distance * i, 0.0, 1.5));
   }
   mobility.SetPositionAllocator(pos);
   mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");

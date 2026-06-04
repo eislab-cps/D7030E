@@ -47,6 +47,38 @@ RUN cd ${NS3_DIR} \
 && ./ns3 configure --enable-examples --enable-tests --enable-python-bindings \
 && CMAKE_BUILD_PARALLEL_LEVEL=$(nproc) ./ns3 build
 
+# Patch ns/__init__.py to skip the netsimulyzer module (prevents SIGSEGV on import)
+RUN python3 - <<'PYEOF'
+import re, pathlib
+init = pathlib.Path("/opt/ns-allinone-3.47/ns-3.47/build/bindings/python/ns/__init__.py")
+src = init.read_text()
+if "BROKEN_MODULES" not in src:
+    patch = 'BROKEN_MODULES = {"netsimulyzer"}\n'
+    src = re.sub(
+        r'(for modname, modfile in _modules\.items\(\):)',
+        patch + r'    if modname in BROKEN_MODULES:\n        continue\n    \1',
+        src
+    )
+    init.write_text(src)
+PYEOF
+
+# Create sub-module shim files so "import ns.core" etc. work
+RUN python3 - <<'PYEOF'
+import pathlib
+ns_dir = pathlib.Path("/opt/ns-allinone-3.47/ns-3.47/build/bindings/python/ns")
+shims = ["core","network","wifi","mobility","internet","applications",
+         "flow_monitor","netanim","csma","bridge","lte","point_to_point",
+         "propagation","spectrum","stats","antenna","buildings","energy",
+         "uan","wimax","mesh","nix_vector_routing","olsr","aodv","dsdv",
+         "dsr","wave","sixlowpan","lr_wpan","zigbee","fd_net_device",
+         "tap_bridge","virtual_net_device","traffic_control"]
+template = 'import cppyy\ntry:\n    import ns as _ns_pkg\n    _ns3 = cppyy.gbl.ns3\nexcept Exception:\n    _ns3 = cppyy.gbl.ns3\n\ndef __getattr__(name):\n    return getattr(_ns3, name)\n'
+for s in shims:
+    p = ns_dir / f"{s}.py"
+    if not p.exists():
+        p.write_text(template)
+PYEOF
+
 WORKDIR /work
 # Default command: open a shell with env ready
 CMD ["/bin/bash"]

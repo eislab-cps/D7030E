@@ -10,17 +10,19 @@ from ns.mobility import MobilityHelper, ListPositionAllocator
 from ns.internet import InternetStackHelper
 from ns.applications import OnOffHelper, PacketSinkHelper
 from ns.flow_monitor import FlowMonitorHelper
+from ctypes import c_double, c_int, c_bool
 
 
 def main():
-    pktSize, seed = 300, 1
+    pktSize = c_int(300)
+    seed = c_int(1)
     cmd = CommandLine()
     cmd.AddValue('pktSize', 'Segment/packet size', pktSize)
     cmd.AddValue('seed', 'RngRun seed', seed)
     cmd.Parse()
 
     ns.core.RngSeedManager.SetSeed(1)
-    ns.core.RngSeedManager.SetRun(seed)
+    ns.core.RngSeedManager.SetRun(seed.value)
     ns.core.Time.SetResolution(ns.core.Time.NS)
 
     nodes = NodeContainer(); nodes.Create(3)
@@ -30,7 +32,7 @@ def main():
     mac = WifiMacHelper(); mac.SetType('ns3::AdhocWifiMac')
     devices = wifi.Install(phy,mac,nodes)
 
-    alloc = ListPositionAllocator(); alloc.Add((0,0,0)); alloc.Add((200,0,0)); alloc.Add((400,0,0))
+    alloc = ListPositionAllocator(); alloc.Add((0,0,1.5)); alloc.Add((200,0,1.5)); alloc.Add((400,0,1.5))
     mob = MobilityHelper(); mob.SetPositionAllocator(alloc); mob.SetMobilityModel('ns3::ConstantPositionMobilityModel'); mob.Install(nodes)
 
     InternetStackHelper().Install(nodes)
@@ -41,10 +43,10 @@ def main():
     srv = sink.Install(nodes.Get(2)); srv.Start(Seconds(0)); srv.Stop(Seconds(10))
 
     # TCP client on node0
-    ns.core.Config.SetDefault('ns3::TcpSocket::SegmentSize', UintegerValue(pktSize))
+    ns.core.Config.SetDefault('ns3::TcpSocket::SegmentSize', UintegerValue(pktSize.value))
     client = OnOffHelper('ns3::TcpSocketFactory', ns.network.InetSocketAddress(ifs.GetAddress(2),9))
     client.SetAttribute('DataRate', StringValue('5Mbps'))
-    client.SetAttribute('PacketSize', UintegerValue(pktSize))
+    client.SetAttribute('PacketSize', UintegerValue(pktSize.value))
     apps = client.Install(nodes.Get(0)); apps.Start(Seconds(1)); apps.Stop(Seconds(10))
 
     fm = FlowMonitorHelper(); monitor = fm.InstallAll()

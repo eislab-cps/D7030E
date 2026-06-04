@@ -13,18 +13,19 @@ import ns.flow_monitor
 import ns.netanim
 
 from ns.core import CommandLine, Seconds
+from ctypes import c_double, c_int, c_bool
 
 
 def main():
-    distance = 50.0
-    seed = 1
+    distance = c_double(50.0)
+    seed = c_int(1)
     cmd = CommandLine()
     cmd.AddValue('distance', 'Distance between nodes (m)', distance)
     cmd.AddValue('seed', 'RNG run number', seed)
     cmd.Parse()
 
     ns.core.RngSeedManager.SetSeed(1)
-    ns.core.RngSeedManager.SetRun(seed)
+    ns.core.RngSeedManager.SetRun(seed.value)
     ns.core.Time.SetResolution(ns.core.Time.NS)
 
     nodes = ns.network.NodeContainer()
@@ -54,7 +55,7 @@ def main():
 
     posAlloc = ns.mobility.ListPositionAllocator()
     posAlloc.Add((0.0, 0.0, 0.0))
-    posAlloc.Add((distance, 0.0, 0.0))
+    posAlloc.Add((distance.value, 0.0, 0.0))
     mobility = ns.mobility.MobilityHelper()
     mobility.SetPositionAllocator(posAlloc)
     mobility.SetMobilityModel('ns3::ConstantPositionMobilityModel')

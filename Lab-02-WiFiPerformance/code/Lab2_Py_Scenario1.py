@@ -20,11 +20,12 @@ from ns.internet import InternetStackHelper
 from ns.applications import OnOffHelper, PacketSinkHelper
 from ns.flow_monitor import FlowMonitorHelper
 from ns.netanim import AnimationInterface
+from ctypes import c_double, c_int, c_bool
 
 def main():
     # Parse command-line arguments
-    rate = 1.0   # Mbps
-    seed = 1
+    rate = c_double(1.0)   # Mbps
+    seed = c_int(1)
     cmd = CommandLine()
     cmd.AddValue('rate', 'Physical layer data rate in Mbps', rate)
     cmd.AddValue('seed', 'RngRun seed value', seed)
@@ -32,7 +33,7 @@ def main():
 
     # Randomization
     ns.core.RngSeedManager.SetSeed(1)
-    ns.core.RngSeedManager.SetRun(seed)
+    ns.core.RngSeedManager.SetRun(seed.value)
 
     ns.core.Time.SetResolution(ns.core.Time.NS)
 
@@ -50,7 +51,7 @@ def main():
 
     wifiHelper = WifiHelper()
     wifiHelper.SetStandard(ns.wifi.WIFI_STANDARD_80211b)
-    dataMode = f"DsssRate{int(rate)}Mbps" if rate != 5.5 else "DsssRate5_5Mbps"
+    dataMode = f"DsssRate{int(rate.value)}Mbps" if rate.value != 5.5 else "DsssRate5_5Mbps"
     wifiHelper.SetRemoteStationManager(
         "ns3::ConstantRateWifiManager",
         "DataMode", StringValue(dataMode),
@@ -93,7 +94,7 @@ def main():
     # OnOff application: STA0 -> STA1
     onoff = OnOffHelper("ns3::UdpSocketFactory",
                         ns.network.InetSocketAddress(staInterfaces.GetAddress(1), 9))
-    onoff.SetAttribute("DataRate", StringValue(f"{rate}Mbps"))
+    onoff.SetAttribute("DataRate", StringValue(f"{rate.value}Mbps"))
     onoff.SetAttribute("PacketSize", UintegerValue(1000))
     clientApp = onoff.Install(wifiStaNodes.Get(0))
     clientApp.Start(Seconds(1.0))

@@ -20,13 +20,14 @@ from ns.internet import InternetStackHelper
 from ns.applications import OnOffHelper, PacketSinkHelper
 from ns.flow_monitor import FlowMonitorHelper
 from ns.netanim import AnimationInterface
+from ctypes import c_double, c_int, c_bool
 
 
 def main():
     # Parse parameters
-    rate = 1.0    # Mbps
-    seed = 1      # run number
-    distance = 10.0  # separation (m)
+    rate = c_double(1.0)    # Mbps
+    seed = c_int(1)         # run number
+    distance = c_double(10.0)  # separation (m)
     cmd = CommandLine()
     cmd.AddValue('rate', 'PHY data rate in Mbps', rate)
     cmd.AddValue('seed', 'RngRun seed value', seed)
@@ -35,7 +36,7 @@ def main():
 
     # Set RNG
     ns.core.RngSeedManager.SetSeed(1)
-    ns.core.RngSeedManager.SetRun(seed)
+    ns.core.RngSeedManager.SetRun(seed.value)
 
     ns.core.Time.SetResolution(ns.core.Time.NS)
 
@@ -54,7 +55,7 @@ def main():
     # Wifi helper and MAC
     wifi = WifiHelper()
     wifi.SetStandard(ns.wifi.WIFI_STANDARD_80211b)
-    dataMode = f"DsssRate{int(rate)}Mbps" if rate != 5.5 else "DsssRate5_5Mbps"
+    dataMode = f"DsssRate{int(rate.value)}Mbps" if rate.value != 5.5 else "DsssRate5_5Mbps"
     wifi.SetRemoteStationManager(
         'ns3::ConstantRateWifiManager',
         'DataMode', StringValue(dataMode),
@@ -74,9 +75,9 @@ def main():
 
     # Mobility: positions [-d,0], [0,0], [d,0]
     posAlloc = ListPositionAllocator()
-    posAlloc.Add((-distance, 0.0, 0.0))
+    posAlloc.Add((-distance.value, 0.0, 0.0))
     posAlloc.Add((0.0, 0.0, 0.0))
-    posAlloc.Add((distance, 0.0, 0.0))
+    posAlloc.Add((distance.value, 0.0, 0.0))
     mobility = MobilityHelper()
     mobility.SetPositionAllocator(posAlloc)
     mobility.SetMobilityModel('ns3::ConstantPositionMobilityModel')
@@ -96,14 +97,14 @@ def main():
     # OnOff for two flows: ports 9 & 10
     onoff1 = OnOffHelper('ns3::UdpSocketFactory',
                          ns.network.InetSocketAddress(staIfaces.GetAddress(2), 9))
-    onoff1.SetAttribute('DataRate', StringValue(f'{rate}Mbps'))
+    onoff1.SetAttribute('DataRate', StringValue(f'{rate.value}Mbps'))
     onoff1.SetAttribute('PacketSize', UintegerValue(1000))
     app1 = onoff1.Install(staNodes.Get(0))
     app1.Start(Seconds(1.0)); app1.Stop(Seconds(10.0))
 
     onoff2 = OnOffHelper('ns3::UdpSocketFactory',
                          ns.network.InetSocketAddress(staIfaces.GetAddress(2), 10))
-    onoff2.SetAttribute('DataRate', StringValue(f'{rate}Mbps'))
+    onoff2.SetAttribute('DataRate', StringValue(f'{rate.value}Mbps'))
     onoff2.SetAttribute('PacketSize', UintegerValue(1000))
     app2 = onoff2.Install(staNodes.Get(1))
     app2.Start(Seconds(1.0)); app2.Stop(Seconds(10.0))

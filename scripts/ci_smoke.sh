@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-echo "=== ns-3.40 smoke test ==="
+echo "=== ns-3.47 smoke test ==="
 
 # Set env but don't die if the import check warns
 source "$(dirname "$0")/setup_env.sh"
@@ -19,9 +19,9 @@ cd "$NS3_DIR"
 echo "[3/3] Minimal sim via direct import (cppyy)"
 python3 - <<'PY'
 from ns import ns
-ns.core.Simulator.Stop(ns.core.Seconds(0.1))
-ns.core.Simulator.Run()
-ns.core.Simulator.Destroy()
+ns.Simulator.Stop(ns.Seconds(0.1))
+ns.Simulator.Run()
+ns.Simulator.Destroy()
 print("Simulator minimal run: OK")
 PY
 

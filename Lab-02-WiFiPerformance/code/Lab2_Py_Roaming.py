@@ -28,6 +28,7 @@ from ns.internet import InternetStackHelper
 from ns.applications import OnOffHelper, PacketSinkHelper
 from ns.csma import CsmaHelper
 from ns.bridge import BridgeHelper
+from ctypes import c_double, c_int, c_bool
 
 g_lastRx = 0
 g_csv = None
@@ -48,10 +49,10 @@ def log_throughput(sink, now):
 def main():
     global g_lastRx, g_csv, log_interval
 
-    speed = 5.0
-    seed = 1
-    sim_duration = 25.0
-    enable_anim = False
+    speed = c_double(5.0)
+    seed = c_int(1)
+    sim_duration = c_double(25.0)
+    enable_anim = c_bool(False)
     csv_path = "roaming_throughput.csv"
 
     cmd = CommandLine()
@@ -62,12 +63,8 @@ def main():
     cmd.AddValue("enableAnim",  "Write roaming_anim.xml.",         enable_anim)
     cmd.Parse()
 
-    speed = float(speed)
-    seed = int(seed)
-    sim_duration = float(sim_duration)
-
     ns.core.RngSeedManager.SetSeed(1)
-    ns.core.RngSeedManager.SetRun(seed)
+    ns.core.RngSeedManager.SetRun(seed.value)
     ns.core.Time.SetResolution(ns.core.Time.NS)
 
     # --- Nodes ---
@@ -146,7 +143,7 @@ def main():
     staMob.SetMobilityModel("ns3::ConstantVelocityMobilityModel")
     staMob.Install(staNode)
     cvmm = staNode.Get(0).GetObject(ns.mobility.ConstantVelocityMobilityModel.GetTypeId())
-    cvmm.SetVelocity(ns.core.Vector(speed, 0.0, 0.0))
+    cvmm.SetVelocity(ns.core.Vector(speed.value, 0.0, 0.0))
 
     serverMob = MobilityHelper()
     serverMob.SetMobilityModel("ns3::ConstantPositionMobilityModel")
@@ -155,7 +152,7 @@ def main():
     # --- Applications ---
     port = 9
     app_start = 1.0
-    app_stop  = sim_duration - 1.0
+    app_stop  = sim_duration.value - 1.0
 
     staIpv4 = staNode.Get(0).GetObject(ns.internet.Ipv4.GetTypeId())
     staAddr = staIpv4.GetAddress(1, 0).GetLocal()
@@ -174,7 +171,7 @@ def main():
                              InetSocketAddress(Ipv4Address.GetAny(), port))
     sinkApp = sinkH.Install(staNode.Get(0))
     sinkApp.Start(Seconds(0.0))
-    sinkApp.Stop(Seconds(sim_duration))
+    sinkApp.Stop(Seconds(sim_duration.value))
 
     # --- CSV output ---
     g_csv = open(csv_path, "w")
@@ -182,11 +179,11 @@ def main():
 
     # --- NetAnim ---
     anim = None
-    if enable_anim:
+    if enable_anim.value:
         anim = ns.netanim.AnimationInterface("roaming_anim.xml")
 
     # --- Schedule logging + run ---
-    ns.core.Simulator.Stop(Seconds(sim_duration))
+    ns.core.Simulator.Stop(Seconds(sim_duration.value))
     sink_ptr = sinkApp.Get(0)
     ns.core.Simulator.Schedule(
         Seconds(log_interval), log_throughput, sink_ptr, log_interval

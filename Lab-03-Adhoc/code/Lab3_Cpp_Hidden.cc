@@ -121,7 +121,7 @@ int main(int argc, char* argv[])
   // phy.Set("TxPowerEnd",   DoubleValue(16.0));
 
   WifiHelper wifi;
-  wifi.SetStandard(WIFI_STANDARD_80211n);
+  wifi.SetStandard(WIFI_STANDARD_80211b);
   // Lock data/control to 1 Mb/s so the MAC/PHY don't change MCS with range.
   wifi.SetRemoteStationManager(
       "ns3::ConstantRateWifiManager",

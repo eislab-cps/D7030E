@@ -18,12 +18,13 @@ from ns.mobility import MobilityHelper, ListPositionAllocator
 from ns.internet import InternetStackHelper
 from ns.applications import OnOffHelper, PacketSinkHelper
 from ns.flow_monitor import FlowMonitorHelper
+from ctypes import c_double, c_int, c_bool
 
 
 def main():
-    numNodes = 3
-    distance = 200.0
-    seed = 1
+    numNodes = c_int(3)
+    distance = c_double(200.0)
+    seed = c_int(1)
     cmd = CommandLine()
     cmd.AddValue('numNodes', 'Number of nodes', numNodes)
     cmd.AddValue('distance', 'Distance between adjacent nodes', distance)
@@ -31,13 +32,13 @@ def main():
     cmd.Parse()
 
     ns.core.RngSeedManager.SetSeed(1)
-    ns.core.RngSeedManager.SetRun(seed)
+    ns.core.RngSeedManager.SetRun(seed.value)
 
     ns.core.Time.SetResolution(ns.core.Time.NS)
 
     pktSizes = [300, 700, 1200]
     for pktSize in pktSizes:
-        nodes = NodeContainer(); nodes.Create(numNodes)
+        nodes = NodeContainer(); nodes.Create(numNodes.value)
 
         channel = YansWifiChannelHelper()
         channel.SetPropagationDelay('ns3::ConstantSpeedPropagationDelayModel')
@@ -57,8 +58,8 @@ def main():
         devices = wifi.Install(phy, mac, nodes)
 
         posAlloc = ListPositionAllocator()
-        for i in range(numNodes):
-            posAlloc.Add((distance * i, 0.0, 0.0))
+        for i in range(numNodes.value):
+            posAlloc.Add((distance.value * i, 0.0, 1.5))
         mobility = MobilityHelper()
         mobility.SetPositionAllocator(posAlloc)
         mobility.SetMobilityModel('ns3::ConstantPositionMobilityModel')
@@ -72,7 +73,7 @@ def main():
         interfaces = address.Assign(devices)
 
         onoff = OnOffHelper('ns3::UdpSocketFactory',
-                            ns.network.InetSocketAddress(interfaces.GetAddress(numNodes-1), 9))
+                            ns.network.InetSocketAddress(interfaces.GetAddress(numNodes.value-1), 9))
         onoff.SetAttribute('DataRate', StringValue('1Mbps'))
         onoff.SetAttribute('PacketSize', UintegerValue(pktSize))
         client = onoff.Install(nodes.Get(0))
@@ -80,7 +81,7 @@ def main():
 
         sink = ns.applications.PacketSinkHelper('ns3::UdpSocketFactory',
                                                 ns.network.InetSocketAddress(ns.network.Ipv4Address.GetAny(), 9))
-        server = sink.Install(nodes.Get(numNodes-1))
+        server = sink.Install(nodes.Get(numNodes.value-1))
         server.Start(Seconds(0.0)); server.Stop(Seconds(10.0))
 
         fmHelper = FlowMonitorHelper()

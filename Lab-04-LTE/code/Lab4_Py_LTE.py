@@ -20,15 +20,16 @@ from ns.mobility import MobilityHelper, ListPositionAllocator
 from ns.applications import OnOffHelper, PacketSinkHelper
 from ns.flow_monitor import FlowMonitorHelper
 from ns.netanim import AnimationInterface
+from ctypes import c_double, c_int, c_bool
 
 def main():
     # Parameters
-    dataRate = 1.0
+    dataRate = c_double(1.0)
     antennaType = 'Isotropic'
-    distance = 100.0
-    seed = 1
-    mobility = False
-    ueSpeed = 10.0
+    distance = c_double(100.0)
+    seed = c_int(1)
+    mobility = c_bool(False)
+    ueSpeed = c_double(10.0)
 
     cmd = CommandLine()
     cmd.AddValue('dataRate', 'Application data rate in Mbps', dataRate)
@@ -39,12 +40,9 @@ def main():
     cmd.AddValue('speed', 'UE speed in m/s when --mobility=true', ueSpeed)
     cmd.Parse()
 
-    distance = float(distance)
-    ueSpeed = float(ueSpeed)
-
     # RNG & time
     ns.core.RngSeedManager.SetSeed(1)
-    ns.core.RngSeedManager.SetRun(seed)
+    ns.core.RngSeedManager.SetRun(seed.value)
     ns.core.Time.SetResolution(ns.core.Time.NS)
 
     # LTE + EPC setup
@@ -72,15 +70,15 @@ def main():
     mob.Install(enbNodes)
 
     uePos = ListPositionAllocator()
-    uePos.Add(ns.core.Vector(distance, 0.0, 0.0))
-    if mobility:
+    uePos.Add(ns.core.Vector(distance.value, 0.0, 0.0))
+    if mobility.value:
         ueMob = MobilityHelper()
         ueMob.SetPositionAllocator(uePos)
         ueMob.SetMobilityModel('ns3::ConstantVelocityMobilityModel')
         ueMob.Install(ueNodes)
         ueNodes.Get(0).GetObject(ns.mobility.ConstantVelocityMobilityModel.GetTypeId()) \
-               .SetVelocity(ns.core.Vector(-ueSpeed, 0.0, 0.0))
-        print(f"Mobile UE: speed={ueSpeed} m/s (toward eNB)")
+               .SetVelocity(ns.core.Vector(-ueSpeed.value, 0.0, 0.0))
+        print(f"Mobile UE: speed={ueSpeed.value} m/s (toward eNB)")
     else:
         mob.SetPositionAllocator(uePos)
         mob.Install(ueNodes)
@@ -119,12 +117,12 @@ def main():
     # Applications: UDP OnOff from remote -> UE
     port = 8000
     app_start = 2.0
-    sim_stop = (distance + 500.0) / ueSpeed + 5.0 if mobility else 22.0
+    sim_stop = (distance.value + 500.0) / ueSpeed.value + 5.0 if mobility.value else 22.0
     app_stop = sim_stop - 2.0
 
     onoff = OnOffHelper('ns3::UdpSocketFactory',
                         ns.network.InetSocketAddress(ueIfaces.GetAddress(0), port))
-    onoff.SetAttribute('DataRate', DataRateValue(ns.core.DataRate(int(dataRate * 1e6))))
+    onoff.SetAttribute('DataRate', DataRateValue(ns.core.DataRate(int(dataRate.value * 1e6))))
     onoff.SetAttribute('PacketSize', UintegerValue(1024))
     client = onoff.Install(remote.Get(0))
     client.Start(Seconds(app_start))
@@ -150,7 +148,7 @@ def main():
             Seconds(1.0), log_mobile_throughput, sink_ptr, now + 1.0
         )
 
-    if mobility:
+    if mobility.value:
         g_csv_f[0] = open("ue_mobile_throughput.csv", "w")
         g_csv_f[0].write("time_s,throughput_bps\n")
         sink_ptr = sinkApp.Get(0)

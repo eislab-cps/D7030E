@@ -11,11 +11,12 @@ import ns.flow_monitor
 import ns.netanim
 
 from ns.core import CommandLine, Seconds
+from ctypes import c_double, c_int, c_bool
 
 
 def main():
     # parse distance parameter
-    distance = 50.0
+    distance = c_double(50.0)
     cmd = CommandLine()
     cmd.AddValue('distance', 'Distance between nodes (m)', distance)
     cmd.Parse()
@@ -48,7 +49,7 @@ def main():
     # position nodes
     posAlloc = ns.mobility.ListPositionAllocator()
     posAlloc.Add((0.0, 0.0, 0.0))
-    posAlloc.Add((distance, 0.0, 0.0))
+    posAlloc.Add((distance.value, 0.0, 0.0))
     mobility = ns.mobility.MobilityHelper()
     mobility.SetPositionAllocator(posAlloc)
     mobility.SetMobilityModel('ns3::ConstantPositionMobilityModel')

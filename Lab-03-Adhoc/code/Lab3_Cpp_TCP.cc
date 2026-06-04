@@ -134,9 +134,9 @@ int main(int argc, char* argv[])
   // -------- Mobility: place nodes on a straight line --------
   MobilityHelper mobility;
   Ptr<ListPositionAllocator> pos = CreateObject<ListPositionAllocator>();
-  pos->Add(Vector(0.0,            0.0, 0.0)); // node 0 (sender)
-  pos->Add(Vector(distance,       0.0, 0.0)); // node 1 (relay)
-  pos->Add(Vector(2.0 * distance, 0.0, 0.0)); // node 2 (sink)
+  pos->Add(Vector(0.0,            0.0, 1.5)); // node 0 (sender)
+  pos->Add(Vector(distance,       0.0, 1.5)); // node 1 (relay)
+  pos->Add(Vector(2.0 * distance, 0.0, 1.5)); // node 2 (sink)
   mobility.SetPositionAllocator(pos);
   mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
   mobility.Install(nodes);

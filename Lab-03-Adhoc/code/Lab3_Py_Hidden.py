@@ -11,10 +11,13 @@ from ns.internet import InternetStackHelper
 from ns.applications import OnOffHelper, PacketSinkHelper
 from ns.flow_monitor import FlowMonitorHelper
 from ns.netanim import AnimationInterface
+from ctypes import c_double, c_int, c_bool
 
 
 def main():
-    distance, seed, enableRtsCts = 200.0, 1, False
+    distance = c_double(200.0)
+    seed = c_int(1)
+    enableRtsCts = c_bool(False)
     cmd = CommandLine()
     cmd.AddValue('distance','Distance STA-AP (m)',distance)
     cmd.AddValue('seed','RngRun seed',seed)
@@ -22,17 +25,18 @@ def main():
     cmd.Parse()
 
     ns.core.RngSeedManager.SetSeed(1)
-    ns.core.RngSeedManager.SetRun(seed)
+    ns.core.RngSeedManager.SetRun(seed.value)
     ns.core.Time.SetResolution(ns.core.Time.NS)
 
     nodes = NodeContainer(); nodes.Create(3)
     # Configure RTS/CTS
     ns.core.Config.SetDefault('ns3::WifiRemoteStationManager::RtsCtsThreshold',
-                               StringValue('0' if enableRtsCts else '2200'))
+                               StringValue('0' if enableRtsCts.value else '2200'))
 
     channel = YansWifiChannelHelper()
     channel.SetPropagationDelay('ns3::ConstantSpeedPropagationDelayModel')
-    channel.AddPropagationLoss('ns3::TwoRayGroundPropagationLossModel')
+    channel.AddPropagationLoss('ns3::RangePropagationLossModel',
+                               'MaxRange', ns.core.DoubleValue(distance.value * 1.5))
     phy = YansWifiPhyHelper(); phy.SetChannel(channel.Create())
 
     wifi = WifiHelper(); wifi.SetStandard(ns.wifi.WIFI_STANDARD_80211b)
@@ -45,7 +49,7 @@ def main():
     apDev=wifi.Install(phy,mac,nodes.Get(1))
 
     alloc=ListPositionAllocator()
-    alloc.Add((0,0,0)); alloc.Add((distance,0,0)); alloc.Add((2*distance,0,0))
+    alloc.Add((0,0,0)); alloc.Add((distance.value,0,0)); alloc.Add((2*distance.value,0,0))
     mob=MobilityHelper(); mob.SetPositionAllocator(alloc); mob.SetMobilityModel('ns3::ConstantPositionMobilityModel'); mob.Install(nodes)
 
     InternetStackHelper().Install(nodes)

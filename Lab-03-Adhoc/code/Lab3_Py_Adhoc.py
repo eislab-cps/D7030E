@@ -20,14 +20,15 @@ from ns.internet import OlsrHelper, AodvHelper
 from ns.applications import OnOffHelper, PacketSinkHelper
 from ns.flow_monitor import FlowMonitorHelper
 from ns.netanim import AnimationInterface
+from ctypes import c_double, c_int, c_bool
 
 
 def main():
     # Parse parameters
-    numNodes = 3
-    pktSize = 1000
-    distance = 200.0
-    seed = 1
+    numNodes = c_int(3)
+    pktSize = c_int(1000)
+    distance = c_double(200.0)
+    seed = c_int(1)
     routing = 'olsr'
     cmd = CommandLine()
     cmd.AddValue('numNodes', 'Number of nodes in chain', numNodes)
@@ -39,18 +40,19 @@ def main():
 
     # RNG setup
     ns.core.RngSeedManager.SetSeed(1)
-    ns.core.RngSeedManager.SetRun(seed)
+    ns.core.RngSeedManager.SetRun(seed.value)
 
     ns.core.Time.SetResolution(ns.core.Time.NS)
 
     # Create nodes
     nodes = NodeContainer()
-    nodes.Create(numNodes)
+    nodes.Create(numNodes.value)
 
     # Wi-Fi ad-hoc setup
     channelHelper = YansWifiChannelHelper()
     channelHelper.SetPropagationDelay('ns3::ConstantSpeedPropagationDelayModel')
-    channelHelper.AddPropagationLoss('ns3::TwoRayGroundPropagationLossModel')
+    channelHelper.AddPropagationLoss('ns3::RangePropagationLossModel',
+                                     'MaxRange', DoubleValue(distance.value * 1.5))
 
     phy = YansWifiPhyHelper()
     phy.SetChannel(channelHelper.Create())
@@ -67,8 +69,8 @@ def main():
 
     # Mobility: place nodes in straight line
     posAlloc = ListPositionAllocator()
-    for i in range(numNodes):
-        posAlloc.Add((distance * i, 0.0, 0.0))
+    for i in range(numNodes.value):
+        posAlloc.Add((distance.value * i, 0.0, 0.0))
     mobility = MobilityHelper()
     mobility.SetPositionAllocator(posAlloc)
     mobility.SetMobilityModel('ns3::ConstantPositionMobilityModel')
@@ -96,9 +98,9 @@ def main():
 
     # OnOff UDP: first -> last
     onoff = OnOffHelper('ns3::UdpSocketFactory',
-                        ns.network.InetSocketAddress(interfaces.GetAddress(numNodes-1), 9))
+                        ns.network.InetSocketAddress(interfaces.GetAddress(numNodes.value-1), 9))
     onoff.SetAttribute('DataRate', ns.core.StringValue('1Mbps'))
-    onoff.SetAttribute('PacketSize', UintegerValue(pktSize))
+    onoff.SetAttribute('PacketSize', UintegerValue(pktSize.value))
     clientApps = onoff.Install(nodes.Get(0))
     clientApps.Start(Seconds(1.0))
     clientApps.Stop(Seconds(10.0))
@@ -106,7 +108,7 @@ def main():
     # Sink on last node
     sink = PacketSinkHelper('ns3::UdpSocketFactory',
                             ns.network.InetSocketAddress(ns.network.Ipv4Address.GetAny(), 9))
-    serverApps = sink.Install(nodes.Get(numNodes-1))
+    serverApps = sink.Install(nodes.Get(numNodes.value-1))
     serverApps.Start(Seconds(0.0))
     serverApps.Stop(Seconds(10.0))
 
