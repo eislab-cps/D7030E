@@ -12,9 +12,11 @@ import ns.netanim
 
 from ns.core import CommandLine, Seconds
 from ctypes import c_double, c_int, c_bool
+import os
 
 
 def main():
+    os.makedirs("scratch/Lab1outputs", exist_ok=True)
     # Parse distance
     distance = c_double(50.0)
     cmd = CommandLine()
@@ -83,7 +85,7 @@ def main():
     # FlowMonitor & NetAnim
     fmHelper = ns.flow_monitor.FlowMonitorHelper()
     monitor = fmHelper.InstallAll()
-    anim = ns.netanim.AnimationInterface('Lab1_TwoRay.xml')
+    anim = ns.netanim.AnimationInterface('scratch/Lab1outputs/Lab1_TwoRay.xml')
 
     ns.core.Simulator.Stop(Seconds(10.0))
     ns.core.Simulator.Run()

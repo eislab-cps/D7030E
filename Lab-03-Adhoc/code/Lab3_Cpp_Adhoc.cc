@@ -44,6 +44,7 @@
 #include "ns3/olsr-helper.h"
 #include "ns3/aodv-helper.h"
 #include "ns3/netanim-module.h"   // only used if --enableAnim=1
+#include <filesystem>
 
 using namespace ns3;
 
@@ -77,6 +78,7 @@ int main(int argc, char* argv[])
   cmd.AddValue("enableAnim", "Write NetAnim XML.",               enableAnim);
   cmd.Parse(argc, argv);
 
+  std::filesystem::create_directories("scratch/Lab3outputs");
   if (numNodes < 3)
   {
     std::cerr << "ERROR: numNodes must be >= 3 for a multi-hop chain.\n";
@@ -135,7 +137,7 @@ int main(int argc, char* argv[])
   if (enablePcap)
   {
     phy.SetPcapDataLinkType(YansWifiPhyHelper::DLT_IEEE802_11_RADIO);
-    phy.EnablePcap("Lab3_Adhoc", devices, true /* promiscuous */);
+    phy.EnablePcap("scratch/Lab3outputs/Lab3_Adhoc", devices, true /* promiscuous */);
   }
 
   // -------- Mobility: straight line, equally spaced --------
@@ -203,7 +205,7 @@ int main(int argc, char* argv[])
   AnimationInterface* anim = nullptr;
   if (enableAnim)
   {
-    anim = new AnimationInterface("Lab3_Adhoc.xml");
+    anim = new AnimationInterface("scratch/Lab3outputs/Lab3_Adhoc.xml");
     // Label nodes with index to make hop-count obvious in the animator.
     for (uint32_t i = 0; i < numNodes; ++i)
     {

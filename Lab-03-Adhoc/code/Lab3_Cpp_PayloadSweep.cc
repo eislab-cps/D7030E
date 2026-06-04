@@ -46,6 +46,7 @@
 #include "ns3/netanim-module.h"
 
 #include <fstream>
+#include <filesystem>
 #include <sstream>
 #include <vector>
 #include <string>
@@ -136,7 +137,7 @@ static CaseResult RunOneCase(uint32_t nodesCount,
   if (enablePcap)
   {
     phy.SetPcapDataLinkType(YansWifiPhyHelper::DLT_IEEE802_11_RADIO);
-    phy.EnablePcap("Lab3_PayloadSweep", devs, true /*promisc*/);
+    phy.EnablePcap("scratch/Lab3outputs/Lab3_PayloadSweep", devs, true /*promisc*/);
   }
 
   // ---------------- mobility (line, equally spaced) ----------------
@@ -186,7 +187,7 @@ static CaseResult RunOneCase(uint32_t nodesCount,
   {
     // Build a unique filename to avoid clobbering between runs.
     std::ostringstream fn;
-    fn << "Lab3_PayloadSweep_n" << nodesCount
+    fn << "scratch/Lab3outputs/Lab3_PayloadSweep_n" << nodesCount
        << "_p" << pktSize
        << "_s" << seedRun
        << ".xml";
@@ -246,6 +247,7 @@ int main(int argc, char* argv[])
   std::vector<uint32_t> pktsList  = ParseUintList(pktsCsv);
   std::vector<uint32_t> seedsList = ParseUintList(seedsCsv);
 
+  std::filesystem::create_directories("scratch/Lab3outputs");
   if (nodesList.empty() || pktsList.empty() || seedsList.empty())
   {
     std::cerr << "ERROR: nodes/pkts/seeds lists must be non-empty.\n";

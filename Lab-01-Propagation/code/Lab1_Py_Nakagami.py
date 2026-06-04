@@ -14,9 +14,11 @@ import ns.netanim
 
 from ns.core import CommandLine, Seconds
 from ctypes import c_double, c_int, c_bool
+import os
 
 
 def main():
+    os.makedirs("scratch/Lab1outputs", exist_ok=True)
     distance = c_double(50.0)
     seed = c_int(1)
     cmd = CommandLine()
@@ -85,7 +87,7 @@ def main():
 
     flowmonHelper = ns.flow_monitor.FlowMonitorHelper()
     monitor = flowmonHelper.InstallAll()
-    anim = ns.netanim.AnimationInterface('Lab1_Nakagami.xml')
+    anim = ns.netanim.AnimationInterface('scratch/Lab1outputs/Lab1_Nakagami.xml')
 
     ns.core.Simulator.Stop(Seconds(11.0))
     ns.core.Simulator.Run()

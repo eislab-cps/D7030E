@@ -5,9 +5,11 @@
 #include "ns3/internet-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/netanim-module.h"
+#include <filesystem>
 using namespace ns3;
 
 int main(int argc, char** argv) {
+  std::filesystem::create_directories("scratch/Lab0outputs");
   NodeContainer nodes; nodes.Create(2);
 
   WifiHelper wifi; wifi.SetStandard(WIFI_STANDARD_80211b);
@@ -39,7 +41,7 @@ int main(int argc, char** argv) {
   ApplicationContainer a2 = cli.Install(nodes.Get(0));
   a2.Start(Seconds(2.0)); a2.Stop(Seconds(10.0));
 
-  AnimationInterface anim("lab0_cpp_anim.xml"); // <-- NetAnim output
+  AnimationInterface anim("scratch/Lab0outputs/lab0_cpp_anim.xml"); // <-- NetAnim output
   anim.SetConstantPosition(nodes.Get(0), 0, 0);
   anim.SetConstantPosition(nodes.Get(1), 5, 0);
 

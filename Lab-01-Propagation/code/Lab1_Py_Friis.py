@@ -12,9 +12,11 @@ import ns.netanim
 
 from ns.core import CommandLine, Seconds
 from ctypes import c_double, c_int, c_bool
+import os
 
 
 def main():
+    os.makedirs("scratch/Lab1outputs", exist_ok=True)
     # parse distance parameter
     distance = c_double(50.0)
     cmd = CommandLine()
@@ -84,7 +86,7 @@ def main():
     # install flow monitor and NetAnim
     flowmonHelper = ns.flow_monitor.FlowMonitorHelper()
     monitor = flowmonHelper.InstallAll()
-    anim = ns.netanim.AnimationInterface('Lab1_Friis.xml')
+    anim = ns.netanim.AnimationInterface('scratch/Lab1outputs/Lab1_Friis.xml')
 
     # run simulation
     ns.core.Simulator.Stop(Seconds(10.0))

@@ -30,6 +30,7 @@
 #include "ns3/applications-module.h"
 #include "ns3/flow-monitor-module.h"
 #include "ns3/netanim-module.h"
+#include <filesystem>
 
 using namespace ns3;
 
@@ -47,6 +48,7 @@ int
 main (int argc, char *argv[])
 {
   // ------------------------- Simulation parameters (CLI) -------------------------
+  std::filesystem::create_directories("scratch/Lab2outputs");
   double   rate = 11.0;       // PHY data rate (Mbps) to lock
   uint32_t seed = 1;          // RngRun; use 1 and 2 for the lab
   CommandLine cmd;
@@ -179,7 +181,7 @@ main (int argc, char *argv[])
   Ptr<FlowMonitor> monitor = fmHelper.InstallAll();
 
   // NetAnim (deliverable name)
-  AnimationInterface anim("scenario2_anim.xml");
+  AnimationInterface anim("scratch/Lab2outputs/scenario2_anim.xml");
   // Label nodes to make the animation self‑explanatory
   anim.UpdateNodeDescription(apNode.Get(0),           "AP");
   anim.UpdateNodeDescription(staSenders.Get(0),       "Sender_L");

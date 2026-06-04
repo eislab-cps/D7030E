@@ -8,11 +8,13 @@
 #include "ns3/applications-module.h"
 #include "ns3/flow-monitor-module.h"
 #include "ns3/netanim-module.h"
+#include <filesystem>
 
 using namespace ns3;
 
 int main (int argc, char* argv[])
 {
+  std::filesystem::create_directories("scratch/Lab1outputs");
   double distance = 50.0, antHeight = 1.5;
   CommandLine cmd;
   cmd.AddValue("distance","meters",distance);
@@ -67,8 +69,8 @@ int main (int argc, char* argv[])
   rx.Start(Seconds(0.0)); rx.Stop(Seconds(10.0));
 
   FlowMonitorHelper fm; Ptr<FlowMonitor> m = fm.InstallAll();
-  AnimationInterface anim("Lab1_TwoRay.xml");
-  phy.EnablePcap("Lab1_TwoRay", devs, true);
+  AnimationInterface anim("scratch/Lab1outputs/Lab1_TwoRay.xml");
+  phy.EnablePcap("scratch/Lab1outputs/Lab1_TwoRay", devs, true);
 
   Simulator::Stop(Seconds(10.0));
   Simulator::Run();

@@ -21,8 +21,10 @@ from ns.applications import OnOffHelper, PacketSinkHelper
 from ns.flow_monitor import FlowMonitorHelper
 from ns.netanim import AnimationInterface
 from ctypes import c_double, c_int, c_bool
+import os
 
 def main():
+    os.makedirs("scratch/Lab2outputs", exist_ok=True)
     # Parse command-line arguments
     rate = c_double(1.0)   # Mbps
     seed = c_int(1)
@@ -110,7 +112,7 @@ def main():
     # FlowMonitor and NetAnim
     fmHelper = FlowMonitorHelper()
     monitor = fmHelper.InstallAll()
-    anim = AnimationInterface("Lab2_Scenario1.xml")
+    anim = AnimationInterface("scratch/Lab2outputs/Lab2_Scenario1.xml")
 
     # Run simulation
     ns.core.Simulator.Stop(Seconds(10.0))

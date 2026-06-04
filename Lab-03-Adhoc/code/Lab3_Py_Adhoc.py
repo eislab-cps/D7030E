@@ -21,9 +21,11 @@ from ns.applications import OnOffHelper, PacketSinkHelper
 from ns.flow_monitor import FlowMonitorHelper
 from ns.netanim import AnimationInterface
 from ctypes import c_double, c_int, c_bool
+import os
 
 
 def main():
+    os.makedirs("scratch/Lab3outputs", exist_ok=True)
     # Parse parameters
     numNodes = c_int(3)
     pktSize = c_int(1000)
@@ -115,7 +117,7 @@ def main():
     # FlowMonitor & NetAnim
     fmHelper = FlowMonitorHelper()
     monitor = fmHelper.InstallAll()
-    anim = AnimationInterface('Lab3_Adhoc.xml')
+    anim = AnimationInterface('scratch/Lab3outputs/Lab3_Adhoc.xml')
 
     # Run simulation
     ns.core.Simulator.Stop(Seconds(11.0))

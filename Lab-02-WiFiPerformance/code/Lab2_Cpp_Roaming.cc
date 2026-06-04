@@ -28,6 +28,7 @@
 #include "ns3/bridge-module.h"
 #include "ns3/netanim-module.h"
 #include <fstream>
+#include <filesystem>
 
 using namespace ns3;
 
@@ -53,7 +54,8 @@ main(int argc, char* argv[])
   uint32_t    seed        = 1;
   double      simDuration = 25.0;
   bool        enableAnim  = false;
-  std::string csvPath     = "roaming_throughput.csv";
+  std::filesystem::create_directories("scratch/Lab2outputs");
+  std::string csvPath     = "scratch/Lab2outputs/roaming_throughput.csv";
 
   CommandLine cmd;
   cmd.AddValue("speed",       "STA velocity in m/s.",            speed);
@@ -178,7 +180,7 @@ main(int argc, char* argv[])
   AnimationInterface* anim = nullptr;
   if (enableAnim)
   {
-    anim = new AnimationInterface("roaming_anim.xml");
+    anim = new AnimationInterface("scratch/Lab2outputs/roaming_anim.xml");
   }
 
   // --- Schedule logging + run ---

@@ -12,9 +12,11 @@ import ns.netanim
 
 from ns.core import CommandLine, Seconds, DoubleValue, StringValue
 from ctypes import c_double, c_int, c_bool
+import os
 
 
 def main():
+    os.makedirs("scratch/Lab1outputs", exist_ok=True)
     distance = c_double(50.0)
     cmd = CommandLine()
     cmd.AddValue('distance', 'Distance (m)', distance)
@@ -76,7 +78,7 @@ def main():
 
     fmHelper = ns.flow_monitor.FlowMonitorHelper()
     monitor = fmHelper.InstallAll()
-    anim = ns.netanim.AnimationInterface('Lab1_Cost231.xml')
+    anim = ns.netanim.AnimationInterface('scratch/Lab1outputs/Lab1_Cost231.xml')
 
     ns.core.Simulator.Stop(Seconds(10.0))
     ns.core.Simulator.Run()

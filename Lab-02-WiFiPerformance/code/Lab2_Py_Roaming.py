@@ -29,6 +29,7 @@ from ns.applications import OnOffHelper, PacketSinkHelper
 from ns.csma import CsmaHelper
 from ns.bridge import BridgeHelper
 from ctypes import c_double, c_int, c_bool
+import os
 
 g_lastRx = 0
 g_csv = None
@@ -53,7 +54,8 @@ def main():
     seed = c_int(1)
     sim_duration = c_double(25.0)
     enable_anim = c_bool(False)
-    csv_path = "roaming_throughput.csv"
+    os.makedirs("scratch/Lab2outputs", exist_ok=True)
+    csv_path = "scratch/Lab2outputs/roaming_throughput.csv"
 
     cmd = CommandLine()
     cmd.AddValue("speed",       "STA velocity in m/s.",            speed)
@@ -180,7 +182,7 @@ def main():
     # --- NetAnim ---
     anim = None
     if enable_anim.value:
-        anim = ns.netanim.AnimationInterface("roaming_anim.xml")
+        anim = ns.netanim.AnimationInterface("scratch/Lab2outputs/roaming_anim.xml")
 
     # --- Schedule logging + run ---
     ns.core.Simulator.Stop(Seconds(sim_duration.value))

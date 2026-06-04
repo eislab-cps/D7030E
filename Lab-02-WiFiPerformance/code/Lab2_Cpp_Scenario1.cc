@@ -28,6 +28,7 @@
 #include "ns3/applications-module.h"
 #include "ns3/flow-monitor-module.h"
 #include "ns3/netanim-module.h"
+#include <filesystem>
 
 using namespace ns3;
 
@@ -48,6 +49,7 @@ main (int argc, char *argv[])
   // ------------------------- Simulation parameters (CLI) -------------------------
   // rate:   the *PHY* data rate we lock the Wi‑Fi manager to (ConstantRateWifiManager)
   // seed:   the RngRun so we can repeat with different contention/backoff timings
+  std::filesystem::create_directories("scratch/Lab2outputs");
   double   rate = 11.0;       // Mbps (valid: 1, 2, 5.5, 11)
   uint32_t seed = 1;          // RngRun index (use 1 and 2 per spec)
   CommandLine cmd;
@@ -167,7 +169,7 @@ main (int argc, char *argv[])
   Ptr<FlowMonitor> monitor = fmHelper.InstallAll();
 
   // NetAnim trace (deliverable‑compliant filename)
-  AnimationInterface anim("scenario1_anim.xml");
+  AnimationInterface anim("scratch/Lab2outputs/scenario1_anim.xml");
   // Make the animation self‑describing
   anim.SetConstantPosition(apNode.Get(0),        0.0, 0.0);
   anim.SetConstantPosition(staNodes.Get(0), -side/2.0, h);

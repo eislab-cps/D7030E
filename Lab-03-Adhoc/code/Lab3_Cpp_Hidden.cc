@@ -56,6 +56,7 @@
 #include "ns3/netanim-module.h"
 
 #include <fstream>
+#include <filesystem>
 #include <string>
 #include <iostream>
 #include <iomanip>
@@ -90,6 +91,7 @@ int main(int argc, char* argv[])
   cmd.AddValue("csv",          "Append one CSV line to this path.",       csvPath);
   cmd.Parse(argc, argv);
 
+  std::filesystem::create_directories("scratch/Lab3outputs");
   // Timing
   const double appStart = 1.0, appStop = 10.0, simStop = 11.0;
   const double txWindow = appStop - appStart; // 9 s
@@ -147,9 +149,9 @@ int main(int argc, char* argv[])
   if (enablePcap)
   {
     phy.SetPcapDataLinkType(YansWifiPhyHelper::DLT_IEEE802_11_RADIO);
-    phy.EnablePcap("Lab3_Hidden_sta0", devSta0, true);
-    phy.EnablePcap("Lab3_Hidden_ap",   devAp,   true);
-    phy.EnablePcap("Lab3_Hidden_sta1", devSta1, true);
+    phy.EnablePcap("scratch/Lab3outputs/Lab3_Hidden_sta0", devSta0, true);
+    phy.EnablePcap("scratch/Lab3outputs/Lab3_Hidden_ap",   devAp,   true);
+    phy.EnablePcap("scratch/Lab3outputs/Lab3_Hidden_sta1", devSta1, true);
   }
 
   // -------- Mobility --------
@@ -207,7 +209,7 @@ int main(int argc, char* argv[])
   AnimationInterface* anim = nullptr;
   if (enableAnim)
   {
-    anim = new AnimationInterface("Lab3_Hidden.xml");
+    anim = new AnimationInterface("scratch/Lab3outputs/Lab3_Hidden.xml");
     anim->UpdateNodeDescription(sta0.Get(0), "STA0");
     anim->UpdateNodeDescription(ap.Get(0),   "AP");
     anim->UpdateNodeDescription(sta1.Get(0), "STA1");

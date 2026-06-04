@@ -21,8 +21,10 @@ from ns.applications import OnOffHelper, PacketSinkHelper
 from ns.flow_monitor import FlowMonitorHelper
 from ns.netanim import AnimationInterface
 from ctypes import c_double, c_int, c_bool
+import os
 
 def main():
+    os.makedirs("scratch/Lab4outputs", exist_ok=True)
     # Parameters
     dataRate = c_double(1.0)
     antennaType = 'Isotropic'
@@ -149,7 +151,7 @@ def main():
         )
 
     if mobility.value:
-        g_csv_f[0] = open("ue_mobile_throughput.csv", "w")
+        g_csv_f[0] = open("scratch/Lab4outputs/ue_mobile_throughput.csv", "w")
         g_csv_f[0].write("time_s,throughput_bps\n")
         sink_ptr = sinkApp.Get(0)
         ns.core.Simulator.Schedule(
@@ -159,7 +161,15 @@ def main():
     # FlowMonitor & NetAnim
     fm = FlowMonitorHelper()
     monitor = fm.InstallAll()
-    anim = AnimationInterface('Lab4_LTE.xml')
+    ns.core.Config.SetDefault("ns3::RadioBearerStatsCalculator::DlPdcpOutputFilename",
+                              ns.core.StringValue("scratch/Lab4outputs/DlPdcpStats.txt"))
+    ns.core.Config.SetDefault("ns3::RadioBearerStatsCalculator::UlPdcpOutputFilename",
+                              ns.core.StringValue("scratch/Lab4outputs/UlPdcpStats.txt"))
+    ns.core.Config.SetDefault("ns3::RadioBearerStatsCalculator::DlRlcOutputFilename",
+                              ns.core.StringValue("scratch/Lab4outputs/DlRlcStats.txt"))
+    ns.core.Config.SetDefault("ns3::RadioBearerStatsCalculator::UlRlcOutputFilename",
+                              ns.core.StringValue("scratch/Lab4outputs/UlRlcStats.txt"))
+    anim = AnimationInterface('scratch/Lab4outputs/Lab4_LTE.xml')
 
     ns.core.Simulator.Stop(Seconds(sim_stop))
     ns.core.Simulator.Run()

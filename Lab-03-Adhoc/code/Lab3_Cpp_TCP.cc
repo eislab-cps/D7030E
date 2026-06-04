@@ -51,6 +51,7 @@
 #include "ns3/netanim-module.h"
 
 #include <fstream>
+#include <filesystem>
 #include <string>
 #include <iostream>
 
@@ -83,6 +84,7 @@ int main(int argc, char* argv[])
   cmd.AddValue("csv",        "If non-empty, write CSV to this path.", csvPath);
   cmd.Parse(argc, argv);
 
+  std::filesystem::create_directories("scratch/Lab3outputs");
   // Sanity
   if (pktSize < 64)
   {
@@ -128,7 +130,7 @@ int main(int argc, char* argv[])
   if (enablePcap)
   {
     phy.SetPcapDataLinkType(YansWifiPhyHelper::DLT_IEEE802_11_RADIO);
-    phy.EnablePcap("Lab3_TCP", devices, true /*promisc*/);
+    phy.EnablePcap("scratch/Lab3outputs/Lab3_TCP", devices, true /*promisc*/);
   }
 
   // -------- Mobility: place nodes on a straight line --------
@@ -188,7 +190,7 @@ int main(int argc, char* argv[])
   AnimationInterface* anim = nullptr;
   if (enableAnim)
   {
-    anim = new AnimationInterface("Lab3_TCP.xml");
+    anim = new AnimationInterface("scratch/Lab3outputs/Lab3_TCP.xml");
     for (uint32_t i = 0; i < nodes.GetN(); ++i)
     {
       anim->UpdateNodeDescription(nodes.Get(i), "n" + std::to_string(i));

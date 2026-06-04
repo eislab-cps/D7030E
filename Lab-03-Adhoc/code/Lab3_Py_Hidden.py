@@ -12,9 +12,11 @@ from ns.applications import OnOffHelper, PacketSinkHelper
 from ns.flow_monitor import FlowMonitorHelper
 from ns.netanim import AnimationInterface
 from ctypes import c_double, c_int, c_bool
+import os
 
 
 def main():
+    os.makedirs("scratch/Lab3outputs", exist_ok=True)
     distance = c_double(200.0)
     seed = c_int(1)
     enableRtsCts = c_bool(False)
@@ -67,7 +69,7 @@ def main():
     srv1=sink1.Install(nodes.Get(1)); srv1.Start(Seconds(0)); srv1.Stop(Seconds(10))
     srv2=sink2.Install(nodes.Get(1)); srv2.Start(Seconds(0)); srv2.Stop(Seconds(10))
 
-    fm=FlowMonitorHelper(); monitor=fm.InstallAll(); AnimationInterface('Lab3_Hidden.xml')
+    fm=FlowMonitorHelper(); monitor=fm.InstallAll(); AnimationInterface('scratch/Lab3outputs/Lab3_Hidden.xml')
     ns.core.Simulator.Stop(Seconds(11)); ns.core.Simulator.Run()
     monitor.CheckForLostPackets(); stats=monitor.GetFlowStats()
     print(f"Hidden flow1: {stats[1].rxBytes*8.0/9.0} bps")

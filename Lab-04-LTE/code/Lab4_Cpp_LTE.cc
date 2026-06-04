@@ -37,6 +37,7 @@
 #include "ns3/applications-module.h"
 #include "ns3/netanim-module.h"          // optional
 #include "ns3/flow-monitor-module.h"     // optional (useful while debugging)
+#include <filesystem>
 
 using namespace ns3;
 
@@ -112,6 +113,9 @@ int main(int argc, char* argv[])
   cmd.AddValue("speed",      "UE speed in m/s when --mobility=true.",                       ueSpeed);
   cmd.AddValue("enableAnim", "Write NetAnim XML (Lab4_LTE.xml).",                            enableAnim);
   cmd.Parse(argc, argv);
+
+  // ---------------- Output directory ----------------
+  std::filesystem::create_directories("scratch/Lab4outputs");
 
   // ---------------- Determinism & time base ----------------
   RngSeedManager::SetSeed(1);
@@ -259,19 +263,27 @@ int main(int argc, char* argv[])
   sinkApp.Stop (Seconds(simStop));
 
   // ---------------- Tracing (REQUIRED by the lab) ----------------
-  // LTE traces: PDCP + RLC (files written by the LTE helper — include them in submission)
+  // LTE traces: PDCP + RLC — redirect to scratch/Lab4outputs/
+  Config::SetDefault("ns3::RadioBearerStatsCalculator::DlPdcpOutputFilename",
+                     StringValue("scratch/Lab4outputs/DlPdcpStats.txt"));
+  Config::SetDefault("ns3::RadioBearerStatsCalculator::UlPdcpOutputFilename",
+                     StringValue("scratch/Lab4outputs/UlPdcpStats.txt"));
+  Config::SetDefault("ns3::RadioBearerStatsCalculator::DlRlcOutputFilename",
+                     StringValue("scratch/Lab4outputs/DlRlcStats.txt"));
+  Config::SetDefault("ns3::RadioBearerStatsCalculator::UlRlcOutputFilename",
+                     StringValue("scratch/Lab4outputs/UlRlcStats.txt"));
   lte->EnablePdcpTraces();
   lte->EnableRlcTraces();
 
   // PCAP evidence on the server side of the PGW link (deliverable: server_trace.pcap)
   // Enable only on the REMOTE HOST device (index 1 in 'internetDevs')
-  p2p.EnablePcap("server_trace", internetDevs.Get(1), true /*promiscuous*/);
+  p2p.EnablePcap("scratch/Lab4outputs/server_trace", internetDevs.Get(1), true /*promiscuous*/);
 
   // Optional: NetAnim for visualization
   AnimationInterface* anim = nullptr;
   if (enableAnim)
   {
-    anim = new AnimationInterface("Lab4_LTE.xml");
+    anim = new AnimationInterface("scratch/Lab4outputs/Lab4_LTE.xml");
     anim->UpdateNodeDescription(enbNodes.Get(0), "eNB");
     anim->UpdateNodeDescription(ueNodes.Get(0),  "UE");
     anim->UpdateNodeDescription(pgw,             "PGW");
@@ -285,7 +297,7 @@ int main(int argc, char* argv[])
   // Per-second CSV logging for mobile UE scenario
   if (mobility)
   {
-    std::string mobCsvPath = csvPath.empty() ? "ue_mobile_throughput.csv" : csvPath + ".mobile.csv";
+    std::string mobCsvPath = csvPath.empty() ? "scratch/Lab4outputs/ue_mobile_throughput.csv" : csvPath + ".mobile.csv";
     g_mobCsv.open(mobCsvPath);
     g_mobCsv << "time_s,throughput_bps\n";
     Ptr<PacketSink> sink = DynamicCast<PacketSink>(sinkApp.Get(0));
