@@ -1,4 +1,4 @@
-# Advanced Wireless Networks – ns-3 Lab Series (2025 Edition)
+# Advanced Wireless Networks – ns-3 Lab Series (2026 Edition)
 
 > **Course code:** D7030E  
 > **University:** Luleå University of Technology  
