@@ -1,74 +1,48 @@
-````markdown
-# Lab 00 – Introduction to ns-3 and NetAnim
+# Lab 00 — Introduction to ns-3 and NetAnim
 
-This is your warm-up lab. The goal is to make sure your ns-3 environment is set up and that you can run a C++ simulation, capture output, and visualize results with NetAnim.
+Warm-up lab: confirm your ns-3.47 environment works, run a C++ simulation,
+capture its output, and view a NetAnim animation.
 
----
+- **Required work:** [docs/Lab-00-Instructions.md](docs/Lab-00-Instructions.md)
+- **Hand in:** [docs/deliverables.md](docs/deliverables.md)
 
-## Learning Goals
-- Verify that you can compile and run a basic ns-3 simulation.
-- Learn how to run C++ code by copying `.cc` files to `scratch/` and using `./ns3 run`.
-- Generate a NetAnim XML trace and open it in the NetAnim GUI.
-- Prepare submission files in the required format.
+## Prerequisites
 
----
+A working ns-3.47 environment and NetAnim — see
+[docs/environment.md](../docs/environment.md). No earlier lab is required.
 
-## Provided Files
-- **docs/**
-  - `Lab-00-Instructions.md` – step-by-step instructions.
-  - `deliverables.md` – the official list of what you must submit.
-- **code/**
-  - `Lab0_Cpp_Hello.cc` – minimal C++ hello simulation.
+## Files
 
-````
-## Running the Code
+| Path | What it is |
+|---|---|
+| `code/Lab0_Cpp_Hello.cc` | Minimal "Hello Simulator" program |
+| `code/Lab0_Cpp_Anim.cc` | Two-node program that writes a NetAnim XML |
+| [`docs/Lab0_Introduction_to_ns-3.pdf`](docs/Lab0_Introduction_to_ns-3.pdf) | Lab handout |
+| `submission/` | Put your deliverables here |
 
-### C++ path
-1. Copy `Lab0_Cpp_Hello.cc` into your ns-3 `scratch/` directory.
-2. Build and run:
-   ```bash
-   cd ~/ns-allinone-3.47/ns-3.47
-   ./ns3 build
-   ./ns3 run scratch/Lab0_Cpp_Hello
+## Running
 
+For the "Hello, Simulator!" part, follow Part 1 of the
+[instructions](docs/Lab-00-Instructions.md). The output is printed to the
+terminal only, so redirect it to a file yourself.
 
-3. Save the output:
+The animation program uses the standard workflow that every later lab also uses.
+From the repository root, with `$NS3_DIR` set:
 
-   ```bash
-   ./ns3 run scratch/Lab0_Cpp_Hello > Lab-00-Introduction/submission/hello_cpp_output.txt
-   ```
+```bash
+cp Lab-00-Introduction/code/Lab0_Cpp_Anim.cc "$NS3_DIR/scratch/"
+cd "$NS3_DIR"
+./ns3 build
+./ns3 run scratch/Lab0_Cpp_Anim
+```
 
----
+It takes no arguments and writes
+`$NS3_DIR/scratch/Lab0outputs/lab0_cpp_anim.xml`.
 
-## NetAnim
+## Outputs
 
-The starter code also creates a NetAnim XML trace. To view:
+Copy the files you need into `submission/` under the names in
+[docs/deliverables.md](docs/deliverables.md), open the XML in NetAnim, and take
+the required screenshot.
 
-1. After running the sim, locate the generated XML (e.g., `lab0_anim.xml`).
-2. Open NetAnim:
-
-   ```bash
-   ./NetAnim lab0_anim.xml
-   ```
-3. Take a screenshot and save as `anim_screenshot_cpp.png` in `submission/`.
-
----
-
-## Deliverables (checklist)
-
-See `docs/deliverables.md` for details. You must provide:
-
-* Hello simulation output text file.
-* NetAnim XML file.
-* NetAnim screenshot (PNG).
-
-⚠️ **Important:** File names must match exactly what's listed in `deliverables.md`.
-
----
-
-## Common Pitfalls
-
-* NetAnim XML empty → means the `AnimationInterface` object was destroyed before simulation ended.
-* Wrong filenames in submission → auto-grader will reject them.
-
----
+Problems: [docs/troubleshooting.md](../docs/troubleshooting.md).

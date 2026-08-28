@@ -1,3 +1,5 @@
+> **Archived — not current.** Kept for reference only; see [docs/archive/README.md](README.md).
+
 # D7030E 2026 Lab Validation Report
 **Generated:** 2026-06-04  
 **Validator:** ns-3 senior developer / QA engineer  

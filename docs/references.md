@@ -95,7 +95,8 @@ All labs reference ns-3 version **3.47**. Use these links to access API referenc
 ## Routing Protocol RFCs
 
 - RFC 3561 — AODV: https://doi.org/10.17487/RFC3561
-- RFC 7181 — OLSRv2: https://doi.org/10.17487/RFC7181
+- RFC 3626 — OLSR (the version the ns-3 `olsr` module implements): https://doi.org/10.17487/RFC3626
+- RFC 7181 — OLSRv2 (successor): https://doi.org/10.17487/RFC7181
 - RFC 6130 — NHDP (companion to OLSRv2): https://doi.org/10.17487/RFC6130
 
 ## Industrial Wireless & Private LTE

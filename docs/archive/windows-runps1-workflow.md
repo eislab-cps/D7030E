@@ -1,9 +1,11 @@
+> **Archived — not current.** Kept for reference only; see [docs/archive/README.md](README.md).
+
 # Installation for Windows users
 
 ## 1. WSL & Docker Desktop
 
 ### 1.1 Installation
-See download instructions [here](/README.md#1-install-prerequisites)
+See [docs/environment.md](../environment.md) for current setup instructions.
 
 ### 1.2 NetAnim
 Open WSL in the the repo root
@@ -107,7 +109,7 @@ Instead of having to
 
 for every file i wanted to automate this process.
 
-By creating a bind mount from `./exec` to `$NS3_DIR/scratch/exec` with the file [CMakeLists.txt](/exec/CMakeLists.txt), whenever `ns3 build` runs, a general application called `exec` is created. This means that as long as there is only one `.cc` file inside `./exec`, you can run it using `ns3 run exec`. This allowed for a workflow where I don't have to remember the exact name of the module I want to run. 
+By creating a bind mount from `./exec` to `$NS3_DIR/scratch/exec` with the file [CMakeLists.txt](../../exec/CMakeLists.txt), whenever `ns3 build` runs, a general application called `exec` is created. This means that as long as there is only one `.cc` file inside `./exec`, you can run it using `ns3 run exec`. This allowed for a workflow where I don't have to remember the exact name of the module I want to run.
 
 The workflow becomes:
 
@@ -115,4 +117,4 @@ The workflow becomes:
 2. Run `ns3 build`
 3. Run `ns3 run exec`
 
-The [run.ps1](/run.ps1) file automates this further by asking which file to copy and then runs both build and exec. This way I never have to attach to docker (except when copying anim files) or start WSL (except for running NetAnim).
+The [run.ps1](../../run.ps1) file automates this further by asking which file to copy and then runs both build and exec. This way I never have to attach to docker (except when copying anim files) or start WSL (except for running NetAnim).

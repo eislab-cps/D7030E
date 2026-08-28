@@ -1,4 +1,4 @@
-# Lab 2 Deliverables
+# Lab 02 Deliverables
 
 ## Scenario 1 – Application Throughput (Infrastructure WiFi)
 

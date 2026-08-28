@@ -1,3 +1,7 @@
+> **Background reading.** Explanatory notes only. The required work is defined by
+> [Lab-03-Instructions.md](Lab-03-Instructions.md) and [deliverables.md](deliverables.md);
+> where this note and those documents differ, they take precedence.
+
 # Lab 03 — Ad-hoc Wi-Fi: Multi-hop Throughput, TCP vs UDP, Hidden Terminals (ns-3)
 
 
@@ -13,7 +17,7 @@ Core settings you must stick to for the multi-hop experiments: **802.11b**, **co
 
 * **`Lab3_Cpp_PayloadSweep.cc`** — same radio/topology, but loops over **payload sizes `{300,700,1200}`** and prints throughput per case. Use it to automate the payload sweep.  
 
-* **`Lab3_Cpp_TCP.cc`** — 3-node **TCP** chain at positions **0/200/400 m**; sets TCP **segment size** to `pktSize`; drives a high **5 Mb/s** OnOff source to saturate the link; computes throughput from FlowMonitor. **Gotcha:** apps send from **1–10 s** (9 s), but this starter divides by **10**; if you want apples-to-apples with UDP, divide by **9**.   
+* **`Lab3_Cpp_TCP.cc`** — 3-node **TCP** chain at positions **0/200/400 m**; sets TCP **segment size** to `pktSize`; drives a high **5 Mb/s** OnOff source to saturate the link; computes throughput from FlowMonitor.
 
 * **`Lab3_Cpp_Hidden.cc`** — the **hidden-terminal** demo: three nodes on a line **STA0 — AP — STA1** (infrastructure MAC, on purpose), two **UDP** senders into the AP, payload **1000 B**, **1 Mb/s**, **RTS/CTS** toggled via `RtsCtsThreshold` (**0 = on**, **2200 = off**). Throughput is again measured over the 1–10 s window.    
 
@@ -37,21 +41,20 @@ Core settings you must stick to for the multi-hop experiments: **802.11b**, **co
 * To change TCP segment size:
   `Config::SetDefault("ns3::TcpSocket::SegmentSize", UintegerValue(pktSize));` (already in the starter). 
 
-### Part 4 — Hidden terminals (RTS/CTS off vs on)
+### Hidden terminals (RTS/CTS off vs on) — Part 5 in the instructions
 
 * Two UDP senders (1000 B @ 1 Mb/s) into an AP; run **without** RTS/CTS, then **with** RTS/CTS (`RtsCtsThreshold = "2200"` → off; `"0"` → on). Report **throughput** and **PDR**, and compare. 
 
 ---
 
-CLI flags supported: `--numNodes`, `--pktSize`, `--distance`, `--seed`. 
+The command-line arguments of each starter are listed in the [lab README](../README.md).
 
 1. **Seeds matter.** The code fixes the global seed and varies the **run**; do at least **two runs** per configuration and **average**. Example pattern: set `Run=1`, run; then `Run=2`, run again.  
 
 2. **Visualization.** The ad-hoc and hidden starters write **NetAnim XML**; open these if you need to sanity-check topology and activity.  
 
 ## Throughput: how we compute it
-* Apps start at **t=1 s** and stop at **t=10 s** → measure over **9 seconds**. The UDP starters already compute `throughput = rxBytes * 8 / 9.0`.  
-* The TCP starter divides by **10.0** even though it also sends from **1–10 s**. If you want strict comparability, recompute using **9 seconds**. Otherwise you’ll under-report TCP by ~11%.
+* Apps start at **t=1 s** and stop at **t=10 s**, so every starter measures over the same **9 second** window.
 
 ## What to look out for (common failure modes)
 
@@ -67,12 +70,6 @@ CLI flags supported: `--numNodes`, `--pktSize`, `--distance`, `--seed`.
 
 * **FlowMonitor indexing:** Starters assume your main flow is **ID 1**. If you add more apps/flows, don’t hard-index blindly.  
 
-## Exactly what to hand in (minimum)
+## What to hand in
 
-1. A table of averaged throughputs for every **(#stations, pktSize)** combination. 
-2. **Two plots**:
-
-   * Throughput vs **packet size** for each **#stations**. 
-   * Throughput vs **#stations** at **1200 B**. 
-3. A short comparison of **TCP vs UDP** on the 3-node chain (use **300 B** and **1200 B**). 
-4. For hidden terminals: results **with/without RTS/CTS**, including **throughput** and **PDR**, and a brief explanation of the difference. 
+See [deliverables.md](deliverables.md).

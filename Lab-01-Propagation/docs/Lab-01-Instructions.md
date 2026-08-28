@@ -36,8 +36,8 @@ differ across these deployment contexts.
 
 ## Prerequisites & Setup
 
-See [common/setup.md](../common/setup.md) for installation and build instructions.  
-Refer to [common/links.md](../common/links.md) for API and tutorial references.
+See [docs/environment.md](../../docs/environment.md) for installation and build instructions.
+Refer to [docs/references.md](../../docs/references.md) for API and tutorial references.
 
 ---
 
@@ -45,10 +45,10 @@ Refer to [common/links.md](../common/links.md) for API and tutorial references.
 
 ### Task (C++): Two-Ray Ground Model
 
-![Two-Ray Ground Reflection Model](/common/images/twoRayGroundPropogationalLoss.png)  
+![Two-Ray Ground Reflection Model](../../common/images/twoRayGroundPropogationalLoss.png)  
 *This visualization shows the power received under the Two-Ray Ground Reflection model, which accounts for both the direct line-of-sight path and the ground-reflected path between a transmitter and a receiver. The formula assumes constructive and destructive interference between the two rays and is especially suitable for long-range scenarios (beyond the crossover distance). NS-3 switches to this model beyond the Friis crossover point, and uses Friis for short distances due to oscillation artifacts at low ranges.*
 
-![Two-Ray Ground Reflection Model](/common/images/500px-2-Ray_Ground_Reflection.png)  
+![Two-Ray Ground Reflection Model](../../common/images/500px-2-Ray_Ground_Reflection.png)  
 *A geometric representation of the Two-Ray Ground Reflection model, showing the paths of the direct signal and the ground-reflected signal between transmitter and receiver. Key parameters include the horizontal distance, transmitter height, receiver height, reflection angles, and total path lengths. The figure demonstrates how constructive and destructive interference arises due to phase differences between the direct and reflected rays.*
 
 1. **Define** distance set
@@ -65,13 +65,13 @@ Refer to [common/links.md](../common/links.md) for API and tutorial references.
 
 **Likely Issues:**
 
-* Mode name typo (`DsssRate5.5Mbps`): see [3.1 in common/troubleshooting.md](../common/troubleshooting.md#31-mode-name-typo).
-* Zero throughput if no routing/mobility errors: see [2.3 in common/troubleshooting.md](../common/troubleshooting.md#23-zero-throughput-in-flowmonitor).
+* Mode name typo (`DsssRate5.5Mbps`): see [docs/troubleshooting.md](../../docs/troubleshooting.md#running-simulations).
+* Zero throughput if no routing/mobility errors: see [docs/troubleshooting.md](../../docs/troubleshooting.md#running-simulations).
 
 ---
 
 ### Task (C++): Cost231-Hata Model
-![COST231 Propagation Loss Model](/common/images/cost231PropogationLoss.png)  
+![COST231 Propagation Loss Model](../../common/images/cost231PropogationLoss.png)  
 *The COST231-Hata propagation loss model, a widely used empirical formula for predicting path loss in urban and suburban environments. The model extends the original Hata model to frequencies between 1500 and 2000 MHz, making it applicable to GSM and LTE networks. It includes corrections based on base station height, mobile antenna height, distance, frequency, and urban density. The formula supports environment-specific adjustments through correction factors for urban vs rural scenarios.*
 
 Repeat steps 1–6 using `Lab1_Cpp_Cost231.cc` and the Cost231‐Hata model.
@@ -79,8 +79,8 @@ Repeat steps 1–6 using `Lab1_Cpp_Cost231.cc` and the Cost231‐Hata model.
 ---
 
 ### Task (C++): Friis Model
-![Friis Free-Space Propagation Model: Line-of-Sight Power Decay](/common/images/friisPropogationLossModel.png)  
-  Friis propagation loss model, which calculates the received signal power under ideal free-space conditions (no obstacles or reflections). It is based on antenna gains, wavelength, and distance between transmitter and receiver. The model is only valid in the far-field region (typically when distance 𝑑>3𝜆/2𝜋), and breaks down at very short distances due to singularities.*
+![Friis Free-Space Propagation Model: Line-of-Sight Power Decay](../../common/images/friisPropogationLossModel.png)  
+  *Friis propagation loss model, which calculates the received signal power under ideal free-space conditions (no obstacles or reflections). It is based on antenna gains, wavelength, and distance between transmitter and receiver. The model is only valid in the far-field region (typically when distance 𝑑>3𝜆/2𝜋), and breaks down at very short distances due to singularities.*
 
 Repeat steps 1–6 using `Lab1_Cpp_Friis.cc` and the Friis model.
 
@@ -88,7 +88,7 @@ Repeat steps 1–6 using `Lab1_Cpp_Friis.cc` and the Friis model.
 
 ### Task (C++): Nakagami Fading Model
 
-![Nakagami Fading](/common/images/friisPropogationLossModel.png)
+![Nakagami Fading](../../common/images/friisPropogationLossModel.png)
 *Nakagami-m fading is layered on top of Friis large-scale path loss to model
 small-scale multipath fading.  The m parameter controls severity:
 m=1 gives Rayleigh fading (worst case), m→∞ approaches AWGN (no fading).
@@ -143,8 +143,8 @@ See [`deliverables.md`](deliverables.md).
 
 ## Cross-References
 
-* Shared setup: [common/setup.md](../common/setup.md)
-* Troubleshooting: [common/troubleshooting.md](../common/troubleshooting.md)
-* API & tutorial links: [common/links.md](../common/links.md)
+* Shared setup: [docs/environment.md](../../docs/environment.md)
+* Troubleshooting: [docs/troubleshooting.md](../../docs/troubleshooting.md)
+* API & tutorial links: [docs/references.md](../../docs/references.md)
 
 ---

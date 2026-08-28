@@ -1,3 +1,5 @@
+> **Archived — not current.** Kept for reference only; see [docs/archive/README.md](README.md).
+
 ## Option A (easiest on Win11): **WSLg = Linux NetAnim GUI on Windows**
 
 Works only on **Windows 11** (or Win10 with WSLg backport).

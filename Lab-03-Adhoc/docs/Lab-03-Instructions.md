@@ -31,8 +31,8 @@ By the end of this lab you will:
 
 ## Prerequisites & Setup
 
-- Installation & build: [common/setup.md](../common/setup.md)  
-- API & tutorials: [common/links.md](../common/links.md)  
+- Installation & build: [docs/environment.md](../../docs/environment.md)
+- API & tutorials: [docs/references.md](../../docs/references.md)
 
 ---
 
@@ -42,13 +42,13 @@ By the end of this lab you will:
 
 1. **Copy** starter:
    ```bash
-   cp code/Lab3_Cpp_Adhoc.cc ~/ns-allinone-3.47/ns-3.47/scratch/
+   cp code/Lab3_Cpp_Adhoc.cc "$NS3_DIR"/scratch/
     ```
 
 2. **Rebuild**:
 
    ```bash
-   cd ~/ns-allinone-3.47/ns-3.47
+   cd "$NS3_DIR"
    cmake --build build -j$(nproc)
    ```
 3. **Configure** number of nodes (`--numNodes`), distance (`--distance`), packet size (`--pktSize`) as script arguments.
@@ -169,8 +169,8 @@ See [`deliverables.md`](deliverables.md).
 
 ## Cross-References
 
-* Setup: [common/setup.md](../common/setup.md)
-* Troubleshooting: [common/troubleshooting.md](../common/troubleshooting.md)
-* API & tutorial links: [common/links.md](../common/links.md)
+* Setup: [docs/environment.md](../../docs/environment.md)
+* Troubleshooting: [docs/troubleshooting.md](../../docs/troubleshooting.md)
+* API & tutorial links: [docs/references.md](../../docs/references.md)
 
 ---

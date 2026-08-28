@@ -1,4 +1,4 @@
-# Lab 1 Deliverables
+# Lab 01 Deliverables
 
 > **Four models are required:** Two-Ray Ground, COST231-Hata, Friis, and Nakagami.
 > Starter code and instructions exist for all four.

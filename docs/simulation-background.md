@@ -1,5 +1,6 @@
-
 # Simulation Background
+
+> Optional reading. Nothing here is required to complete a lab.
 
 This document provides an overview of the simulation architecture used by [ns-3](https://www.nsnam.org/), the discrete-event network simulator employed in the labs. Understanding these core principles will help you write correct simulations, generate reproducible results, and debug effectively.
 
@@ -25,16 +26,14 @@ There is **no real-world time constraint**: the simulation might take seconds or
 The simulator maintains an **event queue**, which stores scheduled events with the form:
 
 ```
-
-\[ simulation\_time, function\_to\_execute ]
-
-````
+[ simulation_time, function_to_execute ]
+```
 
 You schedule events using:
 
 ```cpp
 Simulator::Schedule(Seconds(10.0), &MyFunction);
-````
+```
 
 This will run `MyFunction` at simulation time `t = 10.0s`. The actual wall-clock time at which this happens is irrelevant to the simulation.
 
@@ -55,7 +54,7 @@ Key methods:
 * `Simulator::Now()` returns current simulation time.
 * `Simulator::Schedule()`, `ScheduleNow()`, and `ScheduleWithContext()` allow flexible scheduling.
 
-More: [Simulator API docs](https://www.nsnam.org/doxygen/classns3_1_1_simulator.html)
+More: [Simulator API docs](https://www.nsnam.org/docs/release/3.47/doxygen/build/html/classns3_1_1_simulator.html)
 
 ---
 
@@ -76,7 +75,7 @@ RngSeedManager::SetRun(7);        // Vary run number for multiple experiments
 * The **run number** picks a different stream within that space.
 * This lets you repeat experiments exactly (same seed and run) or get statistically distinct runs (same seed, different run).
 
-> 🔎 More: [RngSeedManager API](https://www.nsnam.org/doxygen/classns3_1_1_rng_seed_manager.html)
+> 🔎 More: [RngSeedManager API](https://www.nsnam.org/docs/release/3.47/doxygen/build/html/classns3_1_1_rng_seed_manager.html)
 
 ### Good Practice
 
@@ -89,7 +88,7 @@ RngSeedManager::SetRun(7);        // Vary run number for multiple experiments
 
 **Determinism**: Ensure your simulation is deterministic when intended. Avoid hidden nondeterminism (e.g., object creation order in scripts).
 
-**Repeatability**: Fix seeds and run numbers. Use `--RngRun` as a command-line argument to easily vary the run in batch scripts.
+**Repeatability**: Fix seeds and run numbers. Most lab programs expose this as a `--seed` argument; check the lab README.
 
 **Statistical Validity**: Do not rely on a single run. Run at least 3–5 independent simulations and report the mean and standard deviation.
 
@@ -104,7 +103,7 @@ NS_LOG_INFO("At time " << Simulator::Now().GetSeconds() << "s, sending packet.")
 Enable logs with:
 
 ```sh
-NS_LOG="UdpClient=level_info|prefix_time" ./waf --run scratch/my-sim
+NS_LOG="UdpClient=level_info|prefix_time" ./ns3 run scratch/my-sim
 ```
 
 More: [NS-3 Logging Guide](https://www.nsnam.org/docs/tutorial/html/getting-started.html#using-the-ns-3-logging-environment)
@@ -148,7 +147,7 @@ This confirms that simulation time progresses by event execution, not wall time.
 ## 6. Resources
 
 * [NS-3 Manual: Events and Simulation Time](https://www.nsnam.org/docs/manual/html/events.html)
-* [Simulator Class Documentation](https://www.nsnam.org/doxygen/classns3_1_1_simulator.html)
+* [Simulator Class Documentation](https://www.nsnam.org/docs/release/3.47/doxygen/build/html/classns3_1_1_simulator.html)
 * [RNG Best Practices (ns-3 wiki)](https://www.nsnam.org/wiki/Random_Variables)
 * [NS-3 Logging Overview](https://www.nsnam.org/docs/tutorial/html/getting-started.html#using-the-ns-3-logging-environment)
 

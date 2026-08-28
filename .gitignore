@@ -19,8 +19,12 @@ submission/
 # Generated NetAnim XML (if ever checked in)
 **/*.xml
 
+# Simulation outputs (written to $NS3_DIR/scratch/LabNoutputs/)
+**/Lab*outputs/
+
 # Python caches
 __pycache__/
+.pytest_cache/
 *.py[cod]
 *.pyo
 *.pyd

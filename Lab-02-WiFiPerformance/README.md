@@ -1,107 +1,57 @@
-````markdown
-# Lab 02 – Smart-Building Wi-Fi Performance
+# Lab 02 — Smart-Building Wi-Fi Performance
 
-This lab explores how different factors impact Wi-Fi network performance in smart-building and industrial environments. You will evaluate how PHY data rate, packet size, and hidden terminals affect throughput and reliability, and simulate a mobile client roaming between two access points.
+Infrastructure 802.11b: how PHY rate, payload size and hidden terminals affect
+throughput, and how a station roams between two access points.
 
-## Learning Goals
-- Understand the relationship between PHY data rate and application throughput.
-- Measure the effect of packet payload size on throughput.
-- Explore the hidden terminal problem and observe how RTS/CTS improves fairness.
-- Model WiFi roaming between two APs using a CSMA backbone with bridged APs.
-- Gain experience using FlowMonitor, NetAnim, and per-second CSV logging.
+- **Required work:** [docs/Lab-02-Instructions.md](docs/Lab-02-Instructions.md)
+- **Hand in:** [docs/deliverables.md](docs/deliverables.md)
 
-## Provided Files
-- **docs/**
-  - `Lab-02-Instructions.md` – step-by-step instructions.
-  - `deliverables.md` – list of required submission files.
-- **code/**
-  - `Lab2_Cpp_Scenario1.cc` – Scenario 1: one AP, one STA.
-  - `Lab2_Cpp_Scenario2.cc` – Scenario 2: payload sweep & hidden terminals.
-  - `Lab2_Cpp_Roaming.cc` – Scenario 3: smart-building roaming (two APs, mobile STA).
+## Prerequisites
 
-````
-## Running the Code
+Lab 00 completed. Environment: [docs/environment.md](../docs/environment.md).
 
-### Scenario 1 – Rate vs Throughput
+## Files
+
+| Path | What the program sets up |
+|---|---|
+| `code/Lab2_Cpp_Scenario1.cc` | One AP, one sender, one receiver (equilateral triangle, 10 m) |
+| `code/Lab2_Cpp_Scenario2.cc` | One AP, four STAs in two triangles, two parallel UDP flows |
+| `code/Lab2_Cpp_Roaming.cc` | Two bridged APs on a CSMA backbone, one moving STA |
+| [`docs/Lab2_ns-3_wifi-1.pdf`](docs/Lab2_ns-3_wifi-1.pdf), [`docs/jayasuriya2004-hidden.pdf`](docs/jayasuriya2004-hidden.pdf) | Lab handout and hidden-terminal paper |
+| [`docs/background.md`](docs/background.md) | What each scenario measures and why (background reading) |
+| `submission/` | Put your deliverables here |
+
+## Running
+
+From the repository root, with `$NS3_DIR` set:
 
 ```bash
-cp Lab-02-WiFiPerformance/code/Lab2_Cpp_Scenario1.cc ~/ns-allinone-3.47/ns-3.47/scratch/
-cd ~/ns-allinone-3.47/ns-3.47
+cp Lab-02-WiFiPerformance/code/Lab2_Cpp_*.cc "$NS3_DIR/scratch/"
+cd "$NS3_DIR"
 ./ns3 build
-./ns3 run scratch/Lab2_Cpp_Scenario1 --rate=11 --seed=1
+./ns3 run "scratch/Lab2_Cpp_Scenario1 --rate=11 --seed=1"
+./ns3 run "scratch/Lab2_Cpp_Scenario2 --rate=11 --seed=1"
+./ns3 run "scratch/Lab2_Cpp_Roaming --speed=5 --simDuration=25 --seed=1"
 ```
 
-Repeat for multiple data rates and seeds as specified. Log the results into a CSV.
+| Argument | Programs | Meaning |
+|---|---|---|
+| `--rate` | Scenario1, Scenario2 | 802.11b PHY rate in Mbps (1, 2, 5.5, 11) |
+| `--seed` | all | RNG run number |
+| `--speed` | Roaming | STA velocity in m/s |
+| `--simDuration`, `--logInterval` | Roaming | Total simulated seconds; CSV sampling period |
+| `--enableAnim` | Roaming | Write the NetAnim XML (off by default) |
 
-### Scenario 2 – Payload Sweep & Hidden Terminals
+## Outputs
 
-```bash
-./ns3 run scratch/Lab2_Cpp_Scenario2 --payload=500 --enableRtsCts=false
-```
+Throughput values are printed to stdout. Files land in
+`$NS3_DIR/scratch/Lab2outputs/`: `scenario1_anim.xml`, `scenario2_anim.xml`,
+`roaming_throughput.csv` (`time_s,throughput_bps`) and, with `--enableAnim`,
+`roaming_anim.xml`. Copy what you need into `submission/` under the names in
+[docs/deliverables.md](docs/deliverables.md).
 
-Vary payload sizes and toggle RTS/CTS (`--enableRtsCts=true/false`) to collect all required data.
+> The payload sweep and hidden-terminal experiments listed in `deliverables.md`
+> have no matching argument in these three programs. Ask a supervisor how to run
+> them before you start that part.
 
-### Scenario 3 – Smart-Building Roaming
-
-```bash
-./ns3 run scratch/Lab2_Cpp_Roaming --speed=5 --simDuration=25 --seed=1
-```
-
-Vary STA speed (2, 5, 10 m/s). Output: `roaming_throughput.csv` with columns `time_s,throughput_bps`.
-
----
-
-## Data Collection
-
-* **Scenario 1 (Rate Sweep)**:
-
-  * Run at several PHY rates with at least three seeds.
-  * Save results in `scenario1_results.csv`.
-  * Plot throughput vs PHY rate: `scenario1_plot.png`.
-  * Save NetAnim output: `scenario1_anim.xml`, `scenario1_screenshot.png`.
-
-* **Scenario 2 Part 1 (Payload Sweep)**:
-
-  * Test multiple payload sizes at different rates.
-  * Save combined results in `payload_sweep_results.csv`.
-  * Plot throughput vs payload for each rate: `payload_sweep_plot.png`.
-
-* **Scenario 2 Part 2 (Hidden Terminals)**:
-
-  * Run with RTS/CTS disabled and enabled.
-  * Save FlowMonitor results:
-
-    * `hidden_off_results.csv`
-    * `hidden_on_results.csv`
-  * Plot comparison: `hidden_comparison.png`.
-  * Save NetAnim outputs and screenshots:
-
-    * `hidden_off_anim.xml`, `hidden_on_anim.xml`
-    * `hidden_off_screenshot.png`, `hidden_on_screenshot.png`
-
-* **Scenario 3 (Roaming)**:
-
-  * Collect `roaming_throughput.csv` for three STA speeds.
-  * Plot throughput vs time: `roaming_plot.png`.
-
----
-
-## Deliverables Checklist
-
-(see `docs/deliverables.md` for details)
-
-* Scenario 1: `scenario1_results.csv`, `scenario1_plot.png`, anim XML + screenshot.
-* Scenario 2 Part 1: `payload_sweep_results.csv`, `payload_sweep_plot.png`.
-* Scenario 2 Part 2: hidden terminal CSVs, plot, anim XMLs, screenshots.
-* Scenario 3: `roaming_throughput.csv`, `roaming_plot.png`, `roaming_analysis.txt`.
-
----
-
-## Common Pitfalls
-
-* **RTS/CTS not applied:** Set `RtsCtsThreshold=0` *before* installing Wi-Fi devices, or the toggle will have no effect.
-* **FlowMonitor placement:** Must be installed before starting traffic apps, otherwise throughput will log as zero.
-* **Rate string typos:** Use exact Wi-Fi mode names (e.g., `DsssRate5_5Mbps` not `DsssRate5.5Mbps`).
-* **Unlabeled plots:** Every figure must have axis labels and a legend, or points will be deducted.
-
----
+Problems: [docs/troubleshooting.md](../docs/troubleshooting.md).

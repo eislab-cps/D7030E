@@ -1,3 +1,7 @@
+> **Background reading.** Explanatory notes only. The required work is defined by
+> [Lab-02-Instructions.md](Lab-02-Instructions.md) and [deliverables.md](deliverables.md);
+> where this note and those documents differ, they take precedence.
+
 # Scenario 1 — Infrastructure Wi-Fi throughput (one AP, stations talk through it)
 
 **What this is:** A basic home/office Wi-Fi setup: one access point (AP) in the middle; stations (STAs) send UDP traffic through the AP to a receiver. You measure how much useful data per second (application-layer throughput) you actually get when you change the physical (PHY) data rate. 

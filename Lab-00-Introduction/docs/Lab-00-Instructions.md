@@ -18,7 +18,7 @@ By the end of this lab you will be able to:
 
 ## Prerequisites & Setup
 
-See [common/setup.md](../common/setup.md) for detailed installation and build instructions.
+See [docs/environment.md](../../docs/environment.md) for detailed installation and build instructions.
 
 ---
 
@@ -29,13 +29,13 @@ See [common/setup.md](../common/setup.md) for detailed installation and build in
 1. **Copy** the starter code from `code/Lab0_Cpp_Hello.cc` into the ns-3 examples folder:
    ```bash
    cp code/Lab0_Cpp_Hello.cc \
-     ~/ns-allinone-3.47/ns-3.47/examples/tutorial/hello-simulator-0.cc
+     "$NS3_DIR"/examples/tutorial/hello-simulator-0.cc
     ```
 
 2. **Rebuild** ns-3:
 
    ```bash
-   cd ~/ns-allinone-3.47/ns-3.47
+   cd "$NS3_DIR"
    cmake --build build -j$(nproc)
    ```
 3. **Locate & run** the new example:
@@ -54,7 +54,7 @@ See [common/setup.md](../common/setup.md) for detailed installation and build in
 
 **Likely Issues:**
 
-* **Missing `cmake`:** see [1.1 in common/troubleshooting.md](../common/troubleshooting.md#11-error-cmake-not-found).
+* **Missing `cmake`:** see [docs/troubleshooting.md](../../docs/troubleshooting.md#setup-and-build).
 * **Binary not found:** use the `find` command above to locate.
 
 ---
@@ -74,12 +74,12 @@ See [common/setup.md](../common/setup.md) for detailed installation and build in
 3. **Launch** NetAnim:
 
    ```bash
-   netanim ~/ns-allinone-3.47/ns-3.47/lab0-anim.xml
+   netanim "$NS3_DIR"/lab0-anim.xml
    ```
 
 **Likely Issue:**
 
-* **XML not generated:** see [4.1 in common/troubleshooting.md](../common/troubleshooting.md#41-xml-not-generated).
+* **XML not generated:** see [docs/troubleshooting.md](../../docs/troubleshooting.md#output-files).
 
 ---
 
@@ -91,8 +91,8 @@ See [`deliverables.md`](deliverables.md).
 
 ## Cross-References
 
-* Shared setup: [common/setup.md](../common/setup.md)
-* Troubleshooting: [common/troubleshooting.md](../common/troubleshooting.md)
-* API & tutorial links: [common/links.md](../common/links.md)
+* Shared setup: [docs/environment.md](../../docs/environment.md)
+* Troubleshooting: [docs/troubleshooting.md](../../docs/troubleshooting.md)
+* API & tutorial links: [docs/references.md](../../docs/references.md)
 
 ---

@@ -1,3 +1,5 @@
+> **Archived — not current.** Kept for reference only; see [docs/archive/README.md](README.md).
+
 # Lab-00 – End-to-End Walkthrough (ns-3.47 + NetAnim)
 
 > **You can complete Lab-00 entirely inside Docker** (compile/run, produce anim XML).

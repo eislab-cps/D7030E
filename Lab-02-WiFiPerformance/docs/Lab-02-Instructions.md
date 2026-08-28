@@ -30,8 +30,8 @@ By the end of this lab you will:
 
 ## Prerequisites & Setup
 
-- Installation & build: [common/setup.md](../common/setup.md)  
-- API & tutorials: [common/links.md](../common/links.md)
+- Installation & build: [docs/environment.md](../../docs/environment.md)
+- API & tutorials: [docs/references.md](../../docs/references.md)
 
 ---
 
@@ -94,7 +94,7 @@ If you want to keep logs:
 
 **Likely issues:**
 
-* Mode-name typo: see [3.1 in common/troubleshooting.md](../common/troubleshooting.md#31-mode-name-typo).
+* Mode-name typo: see [docs/troubleshooting.md](../../docs/troubleshooting.md#running-simulations).
 * No routing in infra mode: install `InternetStackHelper` on all nodes.
 
 ---
@@ -116,8 +116,11 @@ If you want to keep logs:
 
 ## Part 2: Packet Size & Hidden-Terminal
 
-![Two-Ray Ground Reflection Model](/common/images/hiddenTerminalScenario.png)  
+![Hidden-terminal scenario](../../common/images/hiddenTerminalScenario.png)  
 *Refer to jayasuriya2004-hidden.pdf*
+
+> Read the note at the end of the [lab README](../README.md) before starting this
+> part.
 
 ---
 
@@ -164,8 +167,8 @@ See [`deliverables.md`](deliverables.md).
 
 ## Cross-References
 
-* Setup instructions: [common/setup.md](../common/setup.md)
-* Troubleshooting guide: [common/troubleshooting.md](../common/troubleshooting.md)
-* API & tutorial links: [common/links.md](../common/links.md)
+* Setup instructions: [docs/environment.md](../../docs/environment.md)
+* Troubleshooting guide: [docs/troubleshooting.md](../../docs/troubleshooting.md)
+* API & tutorial links: [docs/references.md](../../docs/references.md)
 
 ---
