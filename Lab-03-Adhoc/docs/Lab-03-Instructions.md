@@ -63,7 +63,9 @@ By the end of this lab you will:
 
 **Likely issues:**
 
-* No routing → throughput=0: add OLSR or static routing helper (see troubleshooting).
+* No routing → throughput=0. The starters enable OLSR and wait 30 s for it to
+  converge before sending; leave both in place (see
+  [docs/troubleshooting.md](../../docs/troubleshooting.md#running-simulations)).
 
 ---
 

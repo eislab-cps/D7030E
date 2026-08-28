@@ -48,7 +48,9 @@ cd "$NS3_DIR"
 | `--enableAnim`, `--enablePcap` | all | Write NetAnim XML / PCAP traces (off by default) |
 
 Multi-hop needs a routing protocol; `Lab3_Cpp_Adhoc` uses OLSR unless you pass
-`--routing=aodv`.
+`--routing=aodv`. Each chain run first gives the routing protocol 30 simulated
+seconds to converge and then sends for 9 seconds — that 9-second window is what
+the reported throughput is measured over.
 
 ## Outputs
 

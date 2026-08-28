@@ -65,14 +65,17 @@ were **not** fixed; they are recorded in [teacher-notes.md](teacher-notes.md).
 | `Lab1_Cpp_Friis --distance=100` | prints the `CSV,model=Friis,…` line; writes `scratch/Lab1outputs/Lab1_Friis.xml` and two PCAPs |
 | `Lab2_Cpp_Scenario1 --rate=11 --seed=1` | 2.73 Mb/s; writes `scenario1_anim.xml` |
 | `Lab2_Cpp_Roaming --speed=5 --simDuration=25 --seed=1` | writes `roaming_throughput.csv` |
-| `Lab3_Cpp_Adhoc` | works at 3 nodes; **zero beyond two hops with the default OLSR** — see L3-5 |
-| `Lab3_Cpp_TCP` | 0.864 Mb/s at 50–100 m; **zero at its default 200 m** — see L3-6 |
+| `Lab3_Cpp_Adhoc` | initially zero beyond two hops with the default OLSR; now 540/351/201/238 kB for 3/4/5/6 nodes — see L3-5 |
+| `Lab3_Cpp_PayloadSweep` | initially zero for 4 and 6 nodes; now non-zero at every point — see L3-5 |
+| `Lab3_Cpp_TCP` | initially zero at its default 200 m; now 0.264 Mb/s at 300 B and 0.382 Mb/s at 1200 B — see L3-5 |
 | `Lab3_Cpp_Hidden --enableRtsCts=0` | reports per-STA PDR |
 | `Lab4_Cpp_LTE --dataRate=10Mbps --distance=100 --antenna=isotropic` | 10.0 Mb/s; writes the four `*Stats.txt` traces and `server_trace-5-1.pcap` |
 
-The two zero-throughput results were found by running the labs, not by reading
-them. Neither was fixed; both are recorded with their measurements as L3-5 and
-L3-6.
+The zero-throughput results were found by running the labs, not by reading them.
+They were reported first as L3-5 and L3-6 and subsequently fixed in the lab code
+at the course coordinator's request: a 30 s routing warm-up in the three Lab 03
+chain programs, leaving the 9 s measurement window and every lab parameter
+unchanged. L3-5 records the cause and the before/after figures.
 
 - **Existing test suites:** `dev-tests/` is git-ignored and its Python suites
   target lab files removed in commit `4807019`; not run.
@@ -123,18 +126,19 @@ external links cannot be resolved from this environment.
 | Clarity and actionability | **Pass.** Prerequisites, first command, working directory, arguments, output locations and deliverables are separately headed in every lab README, and every documented argument was checked against the source and executed |
 | Brevity and cognitive load | **Pass.** Root README 49 lines; each lab README 48–61; environment 111; troubleshooting 43. The root README lost 350 lines of duplicated Windows and setup material |
 | Error prevention and recovery | **Pass.** Verified problems only; no fix changes an experiment; every table row ends in an action or a route to a supervisor; suspected defects are in teacher notes, not presented as student mistakes |
-| Preservation | **Pass.** All protected artefacts byte-identical (SHA-256). In the task documents only links, one figure alt text, one missing italic marker, one cross-reference and the two-digit lab numbering in four titles changed — no task, parameter, deliverable, expected result or ordering |
+| Preservation | **Pass.** Every artefact except the three Lab 03 chain programs is byte-identical (SHA-256). Those three were changed on the coordinator's instruction to fix L3-5/L3-6, and the change adds only a routing warm-up: topology, spacing, PHY, payloads, offered rate, seeds, the 9 s measurement window, the throughput formula and the output files are untouched. In the task documents only links, one figure alt text, one missing italic marker, one cross-reference, the two-digit lab numbering in four titles and the description of the run timing changed — no task, deliverable, expected result or ordering |
 
 **Verdict: conditional pass.** All navigation, link, authority-of-presentation,
 clarity, brevity and preservation criteria pass, and no critical or high-severity
-issue remains that documentation can fix. Twenty-two issues remain open in
-`teacher-notes.md`, ten of them High. Every one of them requires a change to lab
-code, to a task, to a deliverable, or a course-coordinator decision between two
-existing statements, and each was deliberately left unresolved rather than
-answered without evidence. The most consequential are L2-1 (Lab 02 deliverables
-with no starter that can produce them), L3-5 and L3-6 (measured zero throughput
-at the parameters the labs specify), L4-1 (no run produces a required file name)
-and X-2 (the instruction documents predate the starters' arguments).
+issue remains that documentation can fix. Of the 23 issues raised, two (L3-5 and
+L3-6, the Lab 03 chains returning zero) were fixed in the lab code on the
+coordinator's instruction; **21 remain open — 10 High, 10 Medium, 1 Low.** Each
+open one requires a change to a task, to a deliverable, or a course-coordinator
+decision between two existing statements, and each was deliberately left
+unresolved rather than answered without evidence. The most consequential are
+L2-1 (Lab 02 deliverables with no starter that can produce them), L4-1 (no run
+produces a required file name) and X-2 (the instruction documents predate the
+starters' arguments).
 
 Three test–fix–retest iterations were run: initial walkthrough plus audit, a
 fresh-context retest, and a fresh-context confirmation pass. Each was performed

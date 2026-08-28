@@ -7,7 +7,8 @@
  *  - Places nodes on a straight line, equally spaced (default 200 m).
  *  - Enables OLSR routing so multi-hop forwarding works.
  *  - Drives an OnOff UDP source from node 0 to the LAST node.
- *  - Computes application throughput over the ACTUAL TX WINDOW (1..10 s → 9 s).
+ *  - Computes application throughput over the ACTUAL TX WINDOW (9 s, after a
+ *    30 s routing warm-up).
  *  - Prints clean CSV so you can graph/aggregate easily.
  *
  * Why a separate file?
@@ -100,11 +101,15 @@ static CaseResult RunOneCase(uint32_t nodesCount,
                              bool enablePcap,
                              bool enableAnim)
 {
-  // FIXED lab timing: send 1..10 s, stop at 11 s.
-  const double appStart = 1.0;
-  const double appStop  = 10.0;
-  const double simStop  = 11.0;
-  const double txWindow = appStop - appStart; // = 9.0
+  // Routing warm-up: OLSR is proactive and needs time to flood HELLO/TC messages
+  // before end-to-end routes exist.  Without this delay, chains of three or more
+  // hops deliver nothing at all inside the measurement window.  The measurement
+  // window itself is unchanged: traffic still runs for exactly 9 s.
+  const double warmup   = 30.0;                 // routing convergence time (s)
+  const double appStart = warmup + 1.0;
+  const double appStop  = warmup + 10.0;
+  const double simStop  = warmup + 11.0;        // a little tail to flush stats
+  const double txWindow = appStop - appStart;   // 9.0 s
 
   // Deterministic seed + variable run (matches Lab convention).
   RngSeedManager::SetSeed(1);

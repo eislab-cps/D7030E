@@ -11,7 +11,7 @@
  *  - Enables proactive routing (OLSR) so packets actually forward.
  *  - Drives a UDP OnOff source hard enough to saturate the path.
  *  - Measures throughput using BOTH FlowMonitor and the sink app, over the
- *    actual send window (1..10 s → 9 s). The sink-based number is the
+ *    actual send window (9 s, after the routing warm-up). The sink-based number is the
  *    authoritative one; FlowMonitor is printed for sanity.
  *  - Exposes clean CLI flags so you can sweep params from the shell.
  *
@@ -29,7 +29,8 @@
  *   --enableAnim : 1→write NetAnim XML (default 0)
  *
  * Notes:
- *   - TX window is exactly [1s, 10s], so divide bytes by 9 s for throughput.
+ *   - Traffic runs for exactly 9 s after a 30 s routing warm-up, so divide
+ *     received bytes by 9 s for throughput.
  *   - If you see ~0 throughput, you almost certainly disabled/removed routing,
  *     or broke the geometry (e.g., too small spacing so everyone hears everyone).
  */
@@ -89,11 +90,15 @@ int main(int argc, char* argv[])
   RngSeedManager::SetSeed(1);
   RngSeedManager::SetRun(seedRun);
 
-  // Simulation time: allow apps to run 1..10 s; stop at a little after to flush.
-  const double appStart = 1.0;
-  const double appStop  = 10.0;
-  const double simStop  = 11.0;  // a bit of tail for stats/teardown
-  const double txWindow = appStop - appStart; // should be 9.0 s
+  // Routing warm-up: OLSR is proactive and needs time to flood HELLO/TC messages
+  // before end-to-end routes exist.  Without this delay, chains of three or more
+  // hops deliver nothing at all inside the measurement window.  The measurement
+  // window itself is unchanged: traffic still runs for exactly 9 s.
+  const double warmup   = 30.0;                 // routing convergence time (s)
+  const double appStart = warmup + 1.0;
+  const double appStop  = warmup + 10.0;
+  const double simStop  = warmup + 11.0;        // a little tail to flush stats
+  const double txWindow = appStop - appStart;   // 9.0 s
 
   // -------- Create nodes --------
   NodeContainer nodes;

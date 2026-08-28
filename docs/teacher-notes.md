@@ -3,10 +3,14 @@
 For course staff. Not part of the student reading path.
 
 These issues were found while restructuring the lab documentation (2026-08-28).
-None of them could be fixed by documentation alone: each needs a change to lab
-code, to a task, or to a deliverable, or a decision about which of two existing
-statements applies. Nothing was invented to paper over a conflict, and no
-protected content was changed.
+Each needs a change to lab code, to a task, or to a deliverable, or a decision
+about which of two existing statements applies. Nothing was invented to paper
+over a conflict.
+
+Two of them — L3-5 and L3-6, the Lab 03 chains returning zero throughput — have
+since been **fixed in the lab code** at the course coordinator's request; those
+entries record the cause, the change and the before/after measurements. All
+other entries remain open, and no other protected content has been changed.
 
 Severity: **High** — a student may do or submit the wrong work.
 **Medium** — the lab is doable but avoidable friction or ambiguity remains.
@@ -309,56 +313,52 @@ task, and their results diverge from the reference configuration.
 
 ---
 
-## L3-5 · Verified: `Lab3_Cpp_Adhoc` delivers nothing beyond two hops with OLSR · High · Lab 03
+## L3-5 · FIXED · Lab 03 multi-hop runs returned zero because OLSR had not converged · was High · Lab 03
 
-**Path:** `Lab-03-Adhoc/code/Lab3_Cpp_Adhoc.cc`
+**Paths:** `Lab-03-Adhoc/code/Lab3_Cpp_Adhoc.cc`,
+`Lab-03-Adhoc/code/Lab3_Cpp_PayloadSweep.cc`,
+`Lab-03-Adhoc/code/Lab3_Cpp_TCP.cc`
 
-Measured on ns-3.47 (native build, 2026-08-28), `--pktSize=1200 --seed=1`:
+**Symptom (measured on ns-3.47, native build, 2026-08-28, `--pktSize=1200
+--seed=1`):** every chain of three or more hops delivered nothing, at any
+spacing, while AODV worked and the two-hop chain worked.
 
-| Run | Result |
-|---|---|
-| `--numNodes=3 --distance=200` (default OLSR) | 357 348 rx bytes |
-| `--numNodes=4 --distance=200` (default OLSR) | **0 rx bytes** |
-| `--numNodes=4 --distance=100` (default OLSR) | **0 rx bytes** |
-| `--numNodes=5 --distance=100` or `200` (default OLSR) | **0 rx bytes** |
-| `--numNodes=4 --distance=200 --routing=aodv` | 334 016 rx bytes |
-| `--numNodes=6 --distance=200 --routing=aodv` | 182 972 rx bytes |
+| Run | Before | After |
+|---|---|---|
+| `Lab3_Cpp_Adhoc --numNodes=3 --distance=200` | 357 348 rx bytes | 540 320 |
+| `Lab3_Cpp_Adhoc --numNodes=4 --distance=200` | **0** | 351 208 |
+| `Lab3_Cpp_Adhoc --numNodes=5 --distance=200` | **0** | 201 392 |
+| `Lab3_Cpp_Adhoc --numNodes=6 --distance=200` | **0** | 238 232 |
+| `Lab3_Cpp_Adhoc --numNodes=4 --routing=aodv` | 334 016 | 298 404 |
+| `Lab3_Cpp_PayloadSweep --nodes=4,6 --pkts=1200` | **0** | 187 200 / 267 600 |
+| `Lab3_Cpp_TCP --distance=200 --pktSize=1200` | **0 Mb/s** | 0.382 Mb/s |
+| `Lab3_Cpp_TCP --distance=200 --pktSize=300` | **0 Mb/s** | 0.264 Mb/s |
 
-It is independent of distance, so it is not a range problem: with the default
-OLSR the routes for three or more hops are not in place inside the 1–10 s
-application window, while AODV establishes them on demand.
+**Cause:** all three chain programs started traffic at t=1 s. OLSR is proactive
+and floods HELLO (2 s) and TC (5 s) messages; routes of three or more hops are
+not established that early, so packets were dropped for want of a route. The
+same cause produced L3-6: at 200 m the TCP handshake needs a multi-hop route
+that did not yet exist, which is why TCP worked at 50–100 m (single hop, no
+routing needed) and failed at the mandated 200 m.
 
-**Effect:** Part 1 and Part 2 require hop counts {3, 4, 5, 6}; with the default
-settings every point except the shortest is zero. Part 4 would report OLSR as
-"zero throughput at every chain length", which is an artefact, not a protocol
-property.
+**Fix applied:** a 30 s routing warm-up before the applications start, in all
+three chain programs. The measurement window is unchanged — traffic still runs
+for exactly 9 s and throughput is still `rxBytes * 8 / 9`. Nothing else changed:
+topology, spacing, PHY, payloads, offered rate, seeds and outputs are as before.
+Verified stable for hop counts 3–6 across seeds 1–3, and for AODV.
+`Lab3_Cpp_Hidden.cc` is single-hop and uses no routing, so it was not touched.
 
-**Not changed** — lab code is protected.
-
-**Decision needed:** lengthen the simulation (or shorten OLSR's HELLO/TC
-intervals) so OLSR converges before traffic starts, or state in the instructions
-which routing protocol the multi-hop parts use.
+**Note for Part 4:** with the warm-up, OLSR now has routes ready when traffic
+starts while AODV still pays its on-demand discovery cost on the first packets.
+That is the intended proactive-versus-reactive contrast; previously OLSR read as
+zero at every chain length, which would have taught the opposite lesson.
 
 ---
 
-## L3-6 · Verified: `Lab3_Cpp_TCP` reports zero at its own default spacing · High · Lab 03
+## L3-6 · FIXED — same root cause as L3-5 · was High · Lab 03
 
-**Path:** `Lab-03-Adhoc/code/Lab3_Cpp_TCP.cc`
-
-Measured on ns-3.47 (native build, 2026-08-28), `--pktSize=1200 --seed=1`:
-
-| Run | Result |
-|---|---|
-| `--distance=50` | 0.864 Mb/s |
-| `--distance=100` | 0.864 Mb/s |
-| `--distance=200` (the program's default, and the spacing the lab mandates) | **0 Mb/s** |
-
-**Effect:** the Part 3 TCP-vs-UDP comparison produces no TCP data at the required
-geometry, while the UDP three-node chain at the same 200 m does deliver traffic.
-
-**Not changed** — lab code is protected.
-
-**Decision needed:** investigate the TCP chain at 200 m before the labs run.
+`Lab3_Cpp_TCP` returned zero at its own default 200 m spacing. See L3-5 for the
+cause, the fix and the measurements.
 
 ---
 

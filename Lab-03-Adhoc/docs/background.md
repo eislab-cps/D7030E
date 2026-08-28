@@ -13,13 +13,13 @@ Core settings you must stick to for the multi-hop experiments: **802.11b**, **co
 
 ## What we provide (starters) and what they actually do
 
-* **`Lab3_Cpp_Adhoc.cc`** — baseline **UDP** multi-hop chain. It sets **802.11b** with **ConstantRate 1 Mb/s**, **AdhocWifiMac**; places nodes on a line at `distance * i`; runs an **OnOff UDP** app from node 0 to the **last** node; records throughput with **FlowMonitor** over the **1–10 s** send window (i.e., 9 seconds). It also writes a **NetAnim** XML.    
+* **`Lab3_Cpp_Adhoc.cc`** — baseline **UDP** multi-hop chain. It sets **802.11b** with **ConstantRate 1 Mb/s**, **AdhocWifiMac**; places nodes on a line at `distance * i`; runs an **OnOff UDP** app from node 0 to the **last** node; records throughput with **FlowMonitor** over the **9 second** send window that follows the routing warm-up. It also writes a **NetAnim** XML.
 
 * **`Lab3_Cpp_PayloadSweep.cc`** — same radio/topology, but loops over **payload sizes `{300,700,1200}`** and prints throughput per case. Use it to automate the payload sweep.  
 
 * **`Lab3_Cpp_TCP.cc`** — 3-node **TCP** chain at positions **0/200/400 m**; sets TCP **segment size** to `pktSize`; drives a high **5 Mb/s** OnOff source to saturate the link; computes throughput from FlowMonitor.
 
-* **`Lab3_Cpp_Hidden.cc`** — the **hidden-terminal** demo: three nodes on a line **STA0 — AP — STA1** (infrastructure MAC, on purpose), two **UDP** senders into the AP, payload **1000 B**, **1 Mb/s**, **RTS/CTS** toggled via `RtsCtsThreshold` (**0 = on**, **2200 = off**). Throughput is again measured over the 1–10 s window.    
+* **`Lab3_Cpp_Hidden.cc`** — the **hidden-terminal** demo: three nodes on a line **STA0 — AP — STA1** (infrastructure MAC, on purpose), two **UDP** senders into the AP, payload **1000 B**, **1 Mb/s**, **RTS/CTS** toggled via `RtsCtsThreshold` (**0 = on**, **2200 = off**). Throughput is again measured over a 9 second window. This scenario is single-hop, so it needs no routing and no warm-up.
 
 > Heads-up: the hidden-terminal starter uses **AP/STA** roles (infrastructure) because that cleanly demonstrates two hidden senders colliding at the AP. That’s fine for the concept, even though the chain experiments are **ad-hoc (IBSS)**. **Also, please read through the comments in the code.**
 
@@ -54,11 +54,11 @@ The command-line arguments of each starter are listed in the [lab README](../REA
 2. **Visualization.** The ad-hoc and hidden starters write **NetAnim XML**; open these if you need to sanity-check topology and activity.  
 
 ## Throughput: how we compute it
-* Apps start at **t=1 s** and stop at **t=10 s**, so every starter measures over the same **9 second** window.
+* Each run first spends **30 s** letting OLSR converge, then sends for exactly **9 s**. Every starter measures over that same 9-second window, so the numbers are comparable across parts.
 
 ## What to look out for (common failure modes)
 
-* **“Throughput = 0” on the chain?** You forgot **routing**. Multi-hop packets won’t forward themselves. Enable a routing helper (OLSR/AODV) or populate static routes. The lab spec requires routing to be enabled; the instruction sheet also calls out this exact gotcha.  
+* **“Throughput = 0” on the chain?** Multi-hop packets won’t forward themselves — routing must be enabled, and it must have converged before traffic starts. The starters do both for you (OLSR, plus a 30 s warm-up). If you removed the warm-up or the routing helper while experimenting, put it back; if a run still reports zero with the arguments the lab asks for, tell a supervisor rather than adjusting the scenario.
 
 * **Your nodes all hear each other?** Then you broke the geometry. Keep **200 m spacing** and place nodes **on a straight line** so only neighbors are in range. 
 

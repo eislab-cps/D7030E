@@ -7,7 +7,8 @@
  * uses OLSR routing.
  *
  * Key points:
- *  - EXACT send window is [1s, 10s] ⇒ throughput divides by 9 seconds.
+ *  - Traffic runs for exactly 9 s after a 30 s routing warm-up, so throughput
+ *    divides by 9 seconds.
  *  - TCP segment size is set via Config::SetDefault("ns3::TcpSocket::SegmentSize", ...).
  *  - Traffic generator is an OnOff application using TcpSocketFactory and a high AppRate
  *    (default 5 Mb/s) to drive the path to saturation.
@@ -95,11 +96,15 @@ int main(int argc, char* argv[])
   RngSeedManager::SetSeed(1);
   RngSeedManager::SetRun(seedRun);
 
-  // Timing: app starts at 1 s and stops at 10 s => 9 s window
-  const double appStart = 1.0;
-  const double appStop  = 10.0;
-  const double simStop  = 11.0;
-  const double txWindow = appStop - appStart; // should be 9.0
+  // Routing warm-up: OLSR is proactive and needs time to flood HELLO/TC messages
+  // before end-to-end routes exist.  Without this delay the TCP handshake fails
+  // at the mandated 200 m spacing and the run reports zero.  The measurement
+  // window itself is unchanged: traffic still runs for exactly 9 s.
+  const double warmup   = 30.0;                 // routing convergence time (s)
+  const double appStart = warmup + 1.0;
+  const double appStop  = warmup + 10.0;
+  const double simStop  = warmup + 11.0;        // a little tail to flush stats
+  const double txWindow = appStop - appStart;   // 9.0 s
 
   // -------- Topology: 3 nodes line (0 m, d, 2d) --------
   NodeContainer nodes;
