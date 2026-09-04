@@ -1,33 +1,25 @@
-.PHONY: help docker-build shell check dev lab0
+.PHONY: help setup check lab0 run
 
-IMAGE ?= ns3-3.47:latest
+NS3_DIR ?= $(HOME)/ns-allinone-3.47/ns-3.47
+FILE ?=
+ARGS ?=
 
 help:
 	@echo "Targets:"
-	@echo "  docker-build   Build the Docker image (ns-3.47)"
-	@echo "  shell          Run an interactive shell inside the container (mounts repo at /work)"
-	@echo "  check          Run CI smoke tests inside the container"
-	@echo "  lab0           Run the first Lab-00 Python script found (if any)"
-	@echo "  dev            VS Code devcontainer: see .devcontainer/devcontainer.json"
+	@echo "  setup  Install and build native ns-3.47 in WSL"
+	@echo "  check  Verify the native ns-3.47 C++ environment"
+	@echo "  lab0   Build and run the Lab 00 C++ starter"
+	@echo "  run    Run FILE=<path-to-.cc> with optional ARGS='--name=value'"
 
-docker-build:
-	docker build -t $(IMAGE) .
+setup:
+	scripts/install_wsl.sh
 
-shell: docker-build
-	@# Start or attach to a persistent container, but keep the same entrypoint (bash)
-	@if docker ps -a --format '{{.Names}}' | grep -qx 'ns3dev'; then \
-		echo "[shell] Attaching to existing container ns3dev"; \
-		docker start -ai ns3dev; \
-	else \
-		echo "[shell] Creating container ns3dev"; \
-		docker run --name ns3dev -it -v $$PWD:/work -w /work --init $(IMAGE) bash; \
-	fi
+check:
+	NS3_DIR="$(NS3_DIR)" scripts/ci_smoke.sh
 
-check: docker-build
-	docker run --rm -v $$PWD:/work -w /work $(IMAGE) bash -lc "scripts/ci_smoke.sh"
+lab0:
+	NS3_DIR="$(NS3_DIR)" scripts/run_cpp.sh Lab-00-Introduction/code/Lab0_Cpp_Hello.cc
 
-lab0: docker-build
-	docker run --rm -v $$PWD:/work -w /work $(IMAGE) bash -lc 'source scripts/setup_env.sh && f=$$(ls -1 Lab-00*/code/*.py 2>/dev/null | head -n1); if [ -n "$$f" ]; then python3 "$$f"; else echo "No Lab-00 Python script found"; fi'
-
-dev:
-	@echo "Open this folder in VS Code and 'Reopen in Container' (Dev Containers extension)."
+run:
+	@test -n "$(FILE)" || (echo "Usage: make run FILE=Lab-01-Propagation/code/Lab1_Cpp_Friis.cc ARGS='--distance=100'" && exit 2)
+	NS3_DIR="$(NS3_DIR)" scripts/run_cpp.sh "$(FILE)" $(ARGS)

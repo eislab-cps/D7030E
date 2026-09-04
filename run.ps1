@@ -4,17 +4,8 @@
 # Set working dir
 Set-Location -Path $PSScriptRoot
 
-# Check if the Docker container 'ns3dev' is running
-$containerName = "ns3dev"
-$running = docker ps --filter "name=$containerName" --filter "status=running" --format "{{.Names}}"
-
-if (-not $running) {
-    Write-Host "Container '$containerName' is not running. Starting it..."
-    docker compose up -d
-    # Wait a few seconds to ensure container is fully up
-    # Start-Sleep -Seconds 3
-    Write-Host "Container '$containerName' is now running."
-}
+# WSL distribution that has ns-3.47 installed (see: make setup / scripts/install_wsl.sh)
+$distro = "Ubuntu"
 
 # Prompt user to select a .cc file
 Add-Type -AssemblyName System.Windows.Forms
@@ -29,20 +20,6 @@ if ($OpenFileDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
     $selectedFile = $OpenFileDialog.FileName
     $fileName = $OpenFileDialog.SafeFileName
     Write-Host "Selected file: $selectedFile"
-
-    # Ensure ./exec/ exists
-    $execDir = Join-Path (Get-Location) "exec"
-    if (-not (Test-Path $execDir)) {
-        New-Item -ItemType Directory -Path $execDir | Out-Null
-    }
-
-    # Clear all .cc files in ./exec/
-    Get-ChildItem -Path $execDir -Filter "*.cc" -File | Remove-Item -Force
-    Write-Host "Cleared existing .cc files in $execDir"
-
-    # Copy the selected file into ./exec/
-    Copy-Item -Path $selectedFile -Destination $execDir -Force
-    Write-Host "Copied $selectedFile to $execDir"
 } else {
     Write-Host "No file selected. Exiting script."
     exit
@@ -60,16 +37,32 @@ Write-Host "with arguments:" -NoNewline
 Write-Host " $execArgs" -ForegroundColor Yellow
 Write-Host ""
 
-$cmd = 'cd /work && source scripts/setup_env.sh && cd "$NS3_DIR" && ns3 build && ns3 run exec -- ' + $execArgs
+# Resolve the repo root and the selected file as WSL paths
+$repo = $PSScriptRoot
+$relative = [IO.Path]::GetRelativePath($repo, $selectedFile).Replace([char]92, [char]47)
+$repoForWsl = $repo.Replace([char]92, [char]47)
+$wslRepo = (wsl -d $distro -- wslpath -a $repoForWsl).Trim()
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Could not reach the '$distro' WSL distribution. Run 'make setup' inside it first (see docs/environment.md)." -ForegroundColor Red
+    exit $LASTEXITCODE
+}
 
-Write-Host "--> Running command inside Docker container '$containerName':"
-Write-Host "`t $cmd" -ForegroundColor Green
+$splitArgs = @()
+if ($execArgs.Trim().Length -gt 0) {
+    $splitArgs = $execArgs -split '\s+'
+}
+
+Write-Host "--> Running inside WSL ('$distro'):"
+Write-Host "`t scripts/run_cpp.sh $relative $execArgs" -ForegroundColor Green
 Write-Host ""
 
-# Start an interactive bash session in the Docker container
-
-docker exec -it $containerName bash -c $cmd
+wsl -d $distro -- bash "$wslRepo/scripts/run_cpp.sh" "$relative" @splitArgs
+$exitCode = $LASTEXITCODE
 
 Write-Host ""
-Write-Host "==> Done."
+if ($exitCode -eq 0) {
+    Write-Host "==> Done."
+} else {
+    Write-Host "==> Failed (exit code $exitCode)." -ForegroundColor Red
+}
 Read-Host "Press Enter to stop..."

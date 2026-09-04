@@ -9,10 +9,11 @@ seems to require editing lab parameters, ask a supervisor instead.
 |---|---|---|
 | `cmake: command not found` | `cmake --version` | `sudo apt-get install cmake` (Fedora: `sudo dnf install cmake`) |
 | `Could not find qmake` when building NetAnim | `qmake --version` | `sudo apt-get install qtbase5-dev qttools5-dev-tools` |
-| `./ns3: No such file or directory` | `echo $NS3_DIR`; are you in that directory? | `source scripts/setup_env.sh` (container) or export `NS3_DIR`, then `cd "$NS3_DIR"` |
+| `./ns3: No such file or directory` | `echo $NS3_DIR`; are you in that directory? | `source scripts/setup_env.sh`, or export `NS3_DIR` yourself, then `cd "$NS3_DIR"` |
 | `hello-simulator: No such file or directory` | Examples live under `core`, not `applications` | `find build/src -type f -executable \| grep hello-simulator` and run that path |
-| `./ns3 run` cannot find your program | Was the `.cc` copied into `$NS3_DIR/scratch/`? Did `./ns3 build` succeed? | Re-copy the file, rebuild, then run `scratch/<ProgramName>` without the `.cc` |
-| `docker: command not found` inside WSL Ubuntu | Docker Desktop → Settings → Resources → WSL Integration | Enable your Ubuntu distribution, Apply & Restart, then `wsl --shutdown` in PowerShell |
+| `./ns3 run` cannot find your program | Was the `.cc` copied into `$NS3_DIR/scratch/`? Did `./ns3 build` succeed? | Re-copy the file, rebuild, then run `scratch/<ProgramName>` without the `.cc`. Using `scripts/run_cpp.sh`/`make run`/`run.ps1`, it always builds and runs the target named `exec` |
+| `ns-3.47 was not found at ...` from `setup_env.sh` | Was `scripts/install_wsl.sh` run yet? | Run `make setup` (or `scripts/install_wsl.sh`) once inside Ubuntu on WSL2 |
+| `run.ps1` fails to reach WSL | Is Ubuntu installed and does `wsl -d Ubuntu -- true` succeed? | Install it with `wsl --install -d Ubuntu`, or edit the `$distro` variable in `run.ps1` to match your distribution's name |
 
 ## Running simulations
 

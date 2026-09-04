@@ -2,29 +2,15 @@
 set -euo pipefail
 
 export NS3_VERSION="${NS3_VERSION:-3.47}"
-export NS3_ALLINONE="/opt/ns-allinone-${NS3_VERSION}"
-# Correct layout: /opt/ns-allinone-3.47/ns-3.47
-export NS3_DIR="${NS3_ALLINONE}/ns-${NS3_VERSION}"
+export NS3_ALLINONE="${NS3_ALLINONE:-$HOME/ns-allinone-${NS3_VERSION}}"
+export NS3_DIR="${NS3_DIR:-$NS3_ALLINONE/ns-${NS3_VERSION}}"
 
-# Fallback autodetect if layout changes
-if [ ! -d "$NS3_DIR" ]; then
-  cand=$(ls -d "$NS3_ALLINONE"/ns-* 2>/dev/null | head -n1 || true)
-  [ -n "${cand:-}" ] && NS3_DIR="$cand"
+if [[ ! -x "$NS3_DIR/ns3" ]]; then
+  echo "ns-3.47 was not found at $NS3_DIR" >&2
+  echo "Run scripts/install_wsl.sh first." >&2
+  return 1 2>/dev/null || exit 1
 fi
-export NS3_DIR
 
-# Export envs (don’t rely on wrapper for simple imports)
-export LD_LIBRARY_PATH="${NS3_DIR}/build/lib:${LD_LIBRARY_PATH:-}"
-export PYTHONPATH="${NS3_DIR}/build/bindings/python:${PYTHONPATH:-}"
-export PATH="${NS3_DIR}:${NS3_DIR}/build:${PATH:-}"
-
+export LD_LIBRARY_PATH="$NS3_DIR/build/lib:${LD_LIBRARY_PATH:-}"
+export PATH="$NS3_DIR:$NS3_DIR/build:${PATH:-}"
 echo "[ns3-env] NS3_DIR=$NS3_DIR"
-
-# Try new-style cppyy import; never exit here (we just warn)
-python3 - <<'PY' || true
-try:
-    from ns import ns
-    print("[ns3-env] Python 'ns' import: OK")
-except Exception as e:
-    print("[ns3-env] Python 'ns' import WARNING:", e)
-PY

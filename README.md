@@ -29,7 +29,7 @@ repository overrides them.
 
 | Document | Use it for |
 |---|---|
-| [docs/environment.md](docs/environment.md) | Installing and running ns-3.47, NetAnim, Docker |
+| [docs/environment.md](docs/environment.md) | Installing and running ns-3.47 natively on WSL2, NetAnim |
 | [docs/troubleshooting.md](docs/troubleshooting.md) | Errors, empty results, missing output files |
 | [docs/references.md](docs/references.md) | ns-3 API, tutorials, standards and reading links |
 | [docs/simulation-background.md](docs/simulation-background.md) | Optional: how discrete-event simulation and RNG seeds work |
